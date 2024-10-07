@@ -1,0 +1,9 @@
+services:
+  was:
+    build:
+      context: ./cali_backend
+      dockerfile: Dockerfile
+    volumes:
+      - "./cali_backend:/cali:ro"
+    ports:
+      - "127.0.0.1:8000:8000"
