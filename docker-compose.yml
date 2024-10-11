@@ -14,6 +14,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      cache:
+        condition: service_healthy
 
   db:
     image: postgres:16-alpine3.20 # Latest minor version
@@ -21,8 +23,6 @@ services:
       - POSTGRES_DB=${DATABASE_NAME}
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-    ports:
-      - "5432:5432"
     healthcheck:
       test: "pg_isready --username=${DATABASE_USER} --dbname=${DATABASE_NAME}"
       interval: 2s
@@ -31,6 +31,17 @@ services:
       timeout: 4s
     volumes:
       - "cali-db-data:/var/lib/postgresql/data"
+
+  cache:
+    image: redis:7.2-alpine3.20
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 2s
+      retries: 4
+      start_period: 2s
+      timeout: 4s
+    volumes:
+      - cali-cache-data:/data
 
 volumes:
   cali-db-data:
