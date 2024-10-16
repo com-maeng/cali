@@ -43,6 +43,11 @@ services:
     volumes:
       - cali-cache-data:/data
 
+  search-server:
+    image: redis/redis-stack-server
+    ports:
+      - "6379:6379"
+
 volumes:
   cali-db-data:
   cali-cache-data:
