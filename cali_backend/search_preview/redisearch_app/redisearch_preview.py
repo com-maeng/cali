@@ -4,7 +4,7 @@ from redis import Redis
 from redisearch import Client, TextField
 
 # Redis 및 RediSearch 클라이언트 초기화
-redis_client: Redis = Redis(host='search-server', port=6379)
+redis_client: Redis = Redis(host='search-server-r', port=6379)
 search_client: Client = Client("hanja_index", conn=redis_client)
 
 # 인덱스 생성
@@ -33,7 +33,7 @@ def search_character(query: str) -> List[str]:
         return []
 
 
-if '__name__' == '__main__':
+if __name__ == '__main__':
     # 예제 사용
     results = search_character("날")
     for result in results:

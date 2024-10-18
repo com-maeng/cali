@@ -49,10 +49,12 @@ INSTALLED_APPS = [
 
     ## 3rd party
     # 'rest_framework',
+    # "django_meili",
 
     ## app
-    'main',
-    'search_preview.redisearch_app',
+    # 'main',
+    # 'search_preview.redisearch_app',
+    'search_preview.meilisearch_app',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +155,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# meilisearch
+MEILISEARCH = {
+    'HOST': 'search-server-m',  # MeiliSearch 컨테이너의 주소
+}
