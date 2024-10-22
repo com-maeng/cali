@@ -49,12 +49,9 @@ INSTALLED_APPS = [
 
     ## 3rd party
     # 'rest_framework',
-    # "django_meili",
 
     ## app
-    # 'main',
-    # 'search_preview.redisearch_app',
-    'search_preview.meilisearch_app',
+    'main',
 ]
 
 MIDDLEWARE = [

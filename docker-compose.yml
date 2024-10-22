@@ -43,11 +43,6 @@ services:
     volumes:
       - cali-cache-data:/data
 
-  search-server-r:
-    image: redis/redis-stack-server
-    ports:
-      - "6379:6379"
-
   search-server-m:
     image: getmeili/meilisearch
     ports:
