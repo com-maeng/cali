@@ -45,7 +45,7 @@ class ArtworkDataPipeline:
 
         return artworks
 
-    def __get_files(self, artworks: list[Artwork]) -> None:
+    def __get_artwork_files(self, artworks: list[Artwork]) -> None:
         for artwork in artworks:
             # Get file's ID from full URL
             file_id = artwork.drive_url.replace(
@@ -69,10 +69,10 @@ class ArtworkDataPipeline:
             logging.info('새로 적재할 artwork가 없습니다.')
             return True
 
-        self.__get_files(artworks)
+        self.__get_artwork_files(artworks)
 
         # TODO
-        # self.__load_files()
-        # self.__split_artwork_into_hanja()
+        # self.__load_artwork_files_to_bucket()
+        # self.__split_artworks_into_hanja()
         # self.__label_hanja()
         # self.__load_hanja()
