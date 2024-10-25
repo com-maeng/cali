@@ -6,7 +6,7 @@ from artwork import ArtworkDataPipeline
 
 
 logging.basicConfig(
-    filename='data/elt_pipeline.log',
+    filename='logs/elt_pipeline.log',
     filemode='a',
     format='%(asctime)s - %(levelname)s - %(message)s',
     level=logging.INFO
