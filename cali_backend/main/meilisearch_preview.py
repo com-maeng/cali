@@ -5,7 +5,24 @@ import meilisearch
 
 
 class Search:
+    """
+    Meilisearch 기반 검색엔진
 
+    index와 documents를 정의하고,
+    실시간 검색 추천과 검색어 기반 필터된 정보를 제공합니다.
+
+    doc_settings
+        Description:
+            Meilisearch 초기 index값 세팅
+
+    suggestions:
+        Description:
+            사용자 입력 기반 실시간 검색어 추천 5개를 반환한다.
+
+    search_character:
+        Description:
+            검색된 정보를 반환한다.
+    """
     client = meilisearch.Client('http://search-server-m:7700')
     index = client.index("hanja_index")
 
@@ -59,10 +76,10 @@ class Search:
     def search_character(
             self, hanja: str = "", s_value: str = "jeonseo") -> List[str]:
         """
-        검색된 데이터를 반환한다.
+        검색된 정보를 반환한다.
 
         검색어 "hanja"과 원하는 오서 중 한개인 "s_value"을 입력받을 경우
-        문자 기준으로 검색 후 필터링된 데이터를 반환한다.
+        문자 기준으로 검색 후 필터링된 정보를 반환한다.
 
         Args:
             hanja: str [한자, 훈, 음, 훈 음 모두 검색 가능]
