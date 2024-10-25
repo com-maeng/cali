@@ -3,9 +3,86 @@ from typing import List
 
 import meilisearch
 
-client = meilisearch.Client('http://search-server-m:7700')
 
-index = client.index("hanja_index")
+class Search:
+
+    client = meilisearch.Client('http://search-server-m:7700')
+    index = client.index("hanja_index")
+
+    def doc_settings(self, documents: List[dict]):
+        """
+        Meilisearch 초기 index값 세팅
+
+        서비스로 제공할 검색어 리스트 "documents"를 index에 추가하고,
+        검색어에 필요한 filter의 field값을 업데이트한다.
+
+        Args:
+            documents: List[dict] [검색어 리스트]
+
+        Raises:
+            ValueError: 인자가 조건에 맞지 않는 경우
+
+        Returns:
+            None
+        """
+        self.index.add_documents(documents)
+
+        self.index.update_filterable_attributes([
+            'style'
+        ])
+
+    def suggestions(self, hanja: str = "") -> List[str]:
+        """
+        사용자 입력 기반 실시간 검색어 추천 5개를 반환한다.
+
+        사용자 실시간 입력 "hanja"를 기반으로
+        상위 5개의 hits값을 반환한다.
+
+        Args:
+            hanja: str [한자, 훈, 음, 훈 음 모두 검색 가능]
+
+        Raises:
+            ValueError: 인자가 조건에 맞지 않는 경우
+
+        Returns:
+            hits: 검색 조건에 맞는 한자를 반환
+        """
+        if hanja:
+            results = self.index.search(hanja, {
+                'limit': 5
+            })
+            suggestions = [hit['character'] for hit in results['hits']]
+        else:
+            suggestions = []
+        return suggestions
+
+    def search_character(
+            self, hanja: str = "", s_value: str = "jeonseo") -> List[str]:
+        """
+        검색된 데이터를 반환한다.
+
+        검색어 "hanja"과 원하는 오서 중 한개인 "s_value"을 입력받을 경우
+        문자 기준으로 검색 후 필터링된 데이터를 반환한다.
+
+        Args:
+            hanja: str [한자, 훈, 음, 훈 음 모두 검색 가능]
+            s_value: str [오서 중 한개 검색 ("jeonseo", "yeseo", "haeseo", "haengseo", "choseo")]
+
+        Raises:
+            ValueError: 인자가 조건에 맞지 않는 경우
+
+        Returns:
+            hits: 검색 조건에 맞는 한자를 반환
+        """
+        filter_str = f"style = '{s_value}'"
+        result = self.index.search(
+            hanja,
+            {
+                'filter': [filter_str]
+            }
+        )
+        return result
+
 
 # 데이터 추가
 documents = [
@@ -25,41 +102,3 @@ documents = [
     {'id': 14, 'character': '火 불 화4', 'meaning': '불 화 4', 'style': 'haengseo'},
     {'id': 15, 'character': '火 불 화5', 'meaning': '불 화 5', 'style': 'choseo'},
 ]
-index.add_documents(documents)
-
-index.update_filterable_attributes([
-    'style'
-])
-
-
-def search_character(hanja: str = "", s_value: str = "jeonseo") -> List[str]:
-    """
-    검색된 데이터를 반환한다.
-
-    검색어 "string"과 원하는 오서 중 한개인 "style"을 입력받을 경우
-    문자 기준으로 검색 후 필터링된 데이터를 반환한다.
-
-    Args:
-        string: str [한자, 훈, 음, 훈 음 모두 검색 가능]
-        style: str [오서 중 한개 검색 ("jeonseo", "yeseo", "haeseo", "haengseo", "choseo")]
-
-    Raises:
-        ValueError: 인자가 조건에 맞지 않는 경우
-
-    Returns:
-        hits: 검색 조건에 맞는 한자를 반환
-    """
-    print(hanja, s_value, type(hanja), type(s_value), flush=True)
-    try:
-        filter_str = f"style = '{s_value}'"
-
-        result = index.search(
-            hanja,
-            {
-                'filter': [filter_str]
-            }
-        )
-        return result
-    except Exception as e:
-        print("Search Error:", e, flush=True)
-        return []
