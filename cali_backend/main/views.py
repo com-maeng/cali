@@ -1,33 +1,49 @@
 """This class does used to return to JSON."""
 from django.http import JsonResponse
 
+from adrf.views import APIView
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 from .meilisearch_utils import Search, make_documents
 
 
-async def index_search(request):
-    """
-    request 기반 검색 결과 response
+class SearchView(APIView):
 
-    'q'는 [한자, 훈, 음, 훈 음], 
-    's'는 ["jeonseo", "yeseo", "haeseo", "haengseo", "choseo"]
-    'q'와 's'를 조합한 검색 결과를 JSON 형식으로 반환합니다.
+    q = openapi.Parameter(
+        'q', openapi.IN_PATH, description='query', required=True,
+        type=openapi.TYPE_STRING)
 
-    Args:
-        request: Client 요청
+    s = openapi.Parameter(
+        's', openapi.IN_PATH, description='style', required=True,
+        type=openapi.TYPE_STRING)
 
-    Raises:
-        ValueError: 
+    @swagger_auto_schema(tags=['style 기준 query 검색값을 제공합니다.'],
+                         manual_parameters=[q, s],
+                         responses={200: 'Success'})
+    async def get(self, request):
+        """
+        request 기반 검색 결과 response
 
-    Returns:
-        JsonResponse: 검색 결과
-    """
-    query = request.GET.get("q", "")
-    style = request.GET.get("s", "")
+        'q'는 [한자, 훈, 음, 훈 음], 
+        's'는 ["jeonseo", "yeseo", "haeseo", "haengseo", "choseo"]
+        'q'와 's'를 조합한 검색 결과를 JSON 형식으로 반환합니다.
 
-    search = Search()
-    documents = await make_documents()
-    search.doc_settings(documents)
+        Args:
+            request: Client 요청
 
-    results = search.search_character(query, style)
-    return JsonResponse(results, safe=False,
-                        json_dumps_params={'ensure_ascii': False})
+        Raises:
+            ValueError: 
+
+        Returns:
+            JsonResponse: 검색 결과
+        """
+        query = request.GET.get("q", "")
+        style = request.GET.get("s", "")
+
+        search = Search()
+        documents = await make_documents()
+        search.doc_settings(documents)
+
+        results = search.search_character(query, style)
+        return JsonResponse(results, status=200)

@@ -105,14 +105,12 @@ async def make_documents() -> List[dict]:
     # 특정 데이터 기반 documents 제작 후 반환
     # 특정 데이터가 정의되지 않을 동안 리터럴로 값 대입
     # 데이터 추가
+    hanjas = ["日 날 일", "月 달 월", "火 불 화"]  # 파라미터로 수정 예정
 
     five_style = ["jeonseo", "yeseo", "haeseo", "haengseo", "choseo"]
-
-    hanjas = ["日 날 일", "月 달 월", "火 불 화"]
+    documents = []
 
     idx = 1
-
-    documents = []
     for hanja in hanjas:
         for s in five_style:
             documents.append({'id': idx, 'character': hanja,
