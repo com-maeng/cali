@@ -1,10 +1,10 @@
 """This class does used to return to JSON."""
 from django.http import JsonResponse
 
-from .meilisearch_preview import search_character
+from .meilisearch_utils import Search, make_documents
 
 
-def index_search(request):
+async def index_search(request):
     """
     request 기반 검색 결과 response
 
@@ -23,7 +23,11 @@ def index_search(request):
     """
     query = request.GET.get("q", "")
     style = request.GET.get("s", "")
-    print(f'{query}, {style}', flush=True)
-    results = search_character(query, style)
+
+    search = Search()
+    documents = await make_documents()
+    search.doc_settings(documents)
+
+    results = search.search_character(query, style)
     return JsonResponse(results, safe=False,
                         json_dumps_params={'ensure_ascii': False})

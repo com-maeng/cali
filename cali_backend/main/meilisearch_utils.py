@@ -101,21 +101,26 @@ class Search:
         return result
 
 
-# 데이터 추가
-documents = [
-    {'id': 1, 'character': '日 날 일1', 'meaning': '날 일 1', 'style': 'jeonseo'},
-    {'id': 2, 'character': '日 날 일2', 'meaning': '날 일 2', 'style': 'yeseo'},
-    {'id': 3, 'character': '日 날 일3', 'meaning': '날 일 3', 'style': 'haeseo'},
-    {'id': 4, 'character': '日 날 일4', 'meaning': '날 일 4', 'style': 'haengseo'},
-    {'id': 5, 'character': '日 날 일5', 'meaning': '날 일 5', 'style': 'choseo'},
-    {'id': 6, 'character': '月 달 월1', 'meaning': '달 월 1', 'style': 'jeonseo'},
-    {'id': 7, 'character': '月 달 월2', 'meaning': '달 월 2', 'style': 'yeseo'},
-    {'id': 8, 'character': '月 달 월3', 'meaning': '달 월 3', 'style': 'haeseo'},
-    {'id': 9, 'character': '月 달 월4', 'meaning': '달 월 4', 'style': 'haengseo'},
-    {'id': 10, 'character': '月 달 월5', 'meaning': '달 월 5', 'style': 'choseo'},
-    {'id': 11, 'character': '火 불 화1', 'meaning': '불 화 1', 'style': 'jeonseo'},
-    {'id': 12, 'character': '火 불 화2', 'meaning': '불 화 2', 'style': 'yeseo'},
-    {'id': 13, 'character': '火 불 화3', 'meaning': '불 화 3', 'style': 'haeseo'},
-    {'id': 14, 'character': '火 불 화4', 'meaning': '불 화 4', 'style': 'haengseo'},
-    {'id': 15, 'character': '火 불 화5', 'meaning': '불 화 5', 'style': 'choseo'},
-]
+async def make_documents() -> List[dict]:
+    # 특정 데이터 기반 documents 제작 후 반환
+    # 특정 데이터가 정의되지 않을 동안 리터럴로 값 대입
+    # 데이터 추가
+    documents = [
+        {'id': 1, 'character': '日 날 일1', 'meaning': '날 일 1', 'style': 'jeonseo'},
+        {'id': 2, 'character': '日 날 일2', 'meaning': '날 일 2', 'style': 'yeseo'},
+        {'id': 3, 'character': '日 날 일3', 'meaning': '날 일 3', 'style': 'haeseo'},
+        {'id': 4, 'character': '日 날 일4', 'meaning': '날 일 4', 'style': 'haengseo'},
+        {'id': 5, 'character': '日 날 일5', 'meaning': '날 일 5', 'style': 'choseo'},
+        {'id': 6, 'character': '月 달 월1', 'meaning': '달 월 1', 'style': 'jeonseo'},
+        {'id': 7, 'character': '月 달 월2', 'meaning': '달 월 2', 'style': 'yeseo'},
+        {'id': 8, 'character': '月 달 월3', 'meaning': '달 월 3', 'style': 'haeseo'},
+        {'id': 9, 'character': '月 달 월4', 'meaning': '달 월 4', 'style': 'haengseo'},
+        {'id': 10, 'character': '月 달 월5', 'meaning': '달 월 5', 'style': 'choseo'},
+        {'id': 11, 'character': '火 불 화1', 'meaning': '불 화 1', 'style': 'jeonseo'},
+        {'id': 12, 'character': '火 불 화2', 'meaning': '불 화 2', 'style': 'yeseo'},
+        {'id': 13, 'character': '火 불 화3', 'meaning': '불 화 3', 'style': 'haeseo'},
+        {'id': 14, 'character': '火 불 화4', 'meaning': '불 화 4', 'style': 'haengseo'},
+        {'id': 15, 'character': '火 불 화5', 'meaning': '불 화 5', 'style': 'choseo'},
+    ]
+
+    return documents
