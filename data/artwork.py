@@ -47,7 +47,14 @@ class ArtworkDataPipeline:
             )
             self.artworks.append(artwork)
 
+            logging.info(
+                '새로 적재할 artwork: %s - %s',
+                artwork.artist_name,
+                artwork.artwork_name
+            )
+
         if not self.artworks:
+            logging.info('새로 적재할 artwork가 없습니다.')
             return False  # No artworks to update
 
         return True
@@ -142,7 +149,6 @@ class ArtworkDataPipeline:
 
     def activate_pipeline(self) -> bool:
         if not self.__get_new_artworks():
-            logging.info('새로 적재할 artwork가 없습니다.')
             return True
 
         self.__get_artwork_files()
