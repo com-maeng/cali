@@ -18,7 +18,7 @@ class SearchView(APIView):
         's', openapi.IN_PATH, description='style', required=True,
         type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(tags=['style 기준 query 검색값을 제공합니다.'],
+    @swagger_auto_schema(tags=['검색'],
                          manual_parameters=[q, s],
                          responses={200: 'Success'})
     async def get(self, request):
