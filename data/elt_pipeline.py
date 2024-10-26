@@ -18,6 +18,8 @@ load_dotenv()
 
 def main():
     artwork_processor = ArtworkDataPipeline()
+
+    logging.info('Activate ELT pipeline...')
     artwork_processor.activate_pipeline()
 
 
