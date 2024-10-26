@@ -6,6 +6,7 @@ from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from googleapiclient.http import MediaIoBaseUpload
+from googleapiclient.errors import HttpError
 
 from dtos import Artwork
 from webp import convert_stream_to_webp
@@ -114,6 +115,31 @@ class ArtworkDataPipeline:
 
             logging.info('Uploaded %s', file_name_with_path)
 
+    def __update_is_loaded_column(self, artwork: Artwork):
+        range_name = f'시트1!H{artwork.row_num + 2}'  # 1, 2번째 컬럼이 포함된 행 번호
+        body = {
+            'values': [['Y']]
+        }
+
+        try:
+            result = (
+                self.sheet
+                .values()
+                .update(
+                    spreadsheetId=self.spreadsheet_id,
+                    range=range_name,
+                    body=body,
+                    valueInputOption='USER_ENTERED'
+                )
+                .execute()
+            )
+            logging.info(
+                'Cell %s has been updated to \'Y\'',
+                range_name
+            )
+        except HttpError as e:
+            logging.error(e)
+
     def activate_pipeline(self) -> bool:
         if not self.__get_new_artworks():
             logging.info('새로 적재할 artwork가 없습니다.')
@@ -123,6 +149,8 @@ class ArtworkDataPipeline:
 
         for artwork in self.artworks:
             self.__load_artwork_streams_to_bucket(artwork)
+            self.__update_is_loaded_column(artwork)
+            # TODO: 컬럼 업데이트에 실패했을 때에 대한 처리 (버킷-시트 간 정합성 등)
 
         # TODO
         # self.__split_artworks_into_hanja()
