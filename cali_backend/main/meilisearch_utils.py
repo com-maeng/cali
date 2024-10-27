@@ -1,5 +1,7 @@
 """This class does used to type hint."""
 from typing import List
+from dotenv import load_dotenv
+import os
 
 import meilisearch
 
@@ -23,10 +25,13 @@ class Search:
         Description:
             검색된 정보를 반환한다.
     """
-    client = meilisearch.Client('http://search-server-m:7700')
+    load_dotenv()
+
+    client = meilisearch.Client(
+        'http://search-server-m:7700', os.getenv("MEILI_MASTER_KEY"))
     index = client.index("hanja_index")
 
-    def doc_settings(self, documents: List[dict]):
+    async def doc_settings(self, documents: List[dict]):
         """
         Meilisearch 초기 index값 세팅
 
@@ -42,7 +47,10 @@ class Search:
         Returns:
             None
         """
-        self.index.add_documents(documents)
+        try:
+            self.index.add_documents(documents)
+        except:
+            print(self.index.get_documents(), flush=True)
 
         self.index.update_filterable_attributes([
             'style'

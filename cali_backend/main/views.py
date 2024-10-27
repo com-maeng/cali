@@ -43,7 +43,7 @@ class SearchView(APIView):
 
         search = Search()
         documents = await make_documents()
-        search.doc_settings(documents)
+        await search.doc_settings(documents)
 
         results = search.search_character(query, style)
         return JsonResponse(results, status=200)
