@@ -1,9 +1,17 @@
 """This class does used to type hint."""
 from typing import List
 from dotenv import load_dotenv
+import logging
 import os
 
 import meilisearch
+
+logging.basicConfig(
+    filename='logs/meili_.log',
+    filemode='a',
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
 
 class Search:
@@ -31,7 +39,7 @@ class Search:
         'http://search-server-m:7700', os.getenv("MEILI_MASTER_KEY"))
     index = client.index("hanja_index")
 
-    async def doc_settings(self, documents: List[dict]):
+    async def doc_settings(self, documents: List[dict]) -> None:
         """
         Meilisearch 초기 index값 세팅
 
@@ -48,8 +56,10 @@ class Search:
             None
         """
         try:
+            logging.info('new documents add...')
             self.index.add_documents(documents)
         except:
+            logging.info('documents addded...')
             print(self.index.get_documents(), flush=True)
 
         self.index.update_filterable_attributes([
@@ -115,6 +125,7 @@ async def make_documents() -> List[dict]:
     # 데이터 추가
     hanjas = ["日 날 일", "月 달 월", "火 불 화"]  # 파라미터로 수정 예정
 
+    logging.info('Create new document data...')
     five_style = ["jeonseo", "yeseo", "haeseo", "haengseo", "choseo"]
     documents = []
 

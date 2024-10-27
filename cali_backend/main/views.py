@@ -1,6 +1,7 @@
 """This class does used to return to JSON."""
-from django.http import JsonResponse
+import re
 
+from django.http import JsonResponse
 from adrf.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -41,9 +42,17 @@ class SearchView(APIView):
         query = request.GET.get("q", "")
         style = request.GET.get("s", "")
 
+        pattern = r'^[\u4e00-\u9fff\uac00-\ud7a3\s]+$'
+        if not re.match(pattern, query):
+            return JsonResponse({"error": "검색어가 한문이나 한글이 아닙니다."}, status=400)
+
         search = Search()
         documents = await make_documents()
         await search.doc_settings(documents)
 
         results = search.search_character(query, style)
+        if not results:
+            return JsonResponse(
+                {"error": "document가 구현되어 있지 않거나 없는 데이터입니다."},
+                status=400)
         return JsonResponse(results, status=200)

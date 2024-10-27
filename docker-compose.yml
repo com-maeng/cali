@@ -84,6 +84,6 @@ volumes:
   cali-cache-data:
   meili-data:
 
-networks: # 지금은 불필요할 듯
+networks:
   cali-network:
     driver: bridge
