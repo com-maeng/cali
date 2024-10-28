@@ -4,7 +4,8 @@ services:
       context: ./cali_backend
       dockerfile: Dockerfile
     volumes:
-      - "./cali_backend:/cali:ro"
+      - "./cali_backend:/cali"
+      - "./logs:/cali/logs"
     ports:
       - "127.0.0.1:8000:8000"
     env_file: ".env.dev"

@@ -1,13 +1,18 @@
 """This class does used to type hint."""
-from typing import List
-from dotenv import load_dotenv
 import logging
 import os
+from typing import List
+from dotenv import load_dotenv
 
 import meilisearch
 
+LOG_FILE_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    'logs/cali_backend.log')
+
+# docker container error (logs folder)
 logging.basicConfig(
-    filename='logs/meili_.log',
+    filename=LOG_FILE_PATH,
     filemode='a',
     format='%(asctime)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -55,16 +60,12 @@ class Search:
         Returns:
             None
         """
-        try:
-            logging.info('new documents add...')
-            self.index.add_documents(documents)
-        except:
-            logging.info('documents addded...')
-            print(self.index.get_documents(), flush=True)
+        logging.info('new documents add...')
+        task_info = self.index.add_documents(documents)
+        self.index.wait_for_task(task_info.task_uid)
 
-        self.index.update_filterable_attributes([
-            'style'
-        ])
+        task_info = self.index.update_filterable_attributes(['style'])
+        self.index.wait_for_task(task_info.task_uid)
 
     def suggestions(self, hanja: str = "") -> List[str]:
         """
