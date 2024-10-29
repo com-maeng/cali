@@ -6,8 +6,10 @@ from dotenv import load_dotenv
 
 import meilisearch
 
-LOG_FILE_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+LOG_FILE_PATH = os.path.join(os.path.dirname(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)))),
     'logs/cali_backend.log')
 
 logging.basicConfig(
