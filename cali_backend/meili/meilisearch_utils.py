@@ -10,7 +10,6 @@ LOG_FILE_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     'logs/cali_backend.log')
 
-# docker container error (logs folder)
 logging.basicConfig(
     filename=LOG_FILE_PATH,
     filemode='a',
@@ -44,7 +43,7 @@ class Search:
         'http://search-server-m:7700', os.getenv("MEILI_MASTER_KEY"))
     index = client.index("hanja_index")
 
-    async def doc_settings(self, documents: List[dict]) -> None:
+    def doc_settings(self, documents: List[dict]) -> None:
         """
         Meilisearch 초기 index값 세팅
 
@@ -120,7 +119,7 @@ class Search:
         return result
 
 
-async def make_documents() -> List[dict]:
+def make_documents() -> List[dict]:
     # 특정 데이터 기반 documents 제작 후 반환
     # 특정 데이터가 정의되지 않을 동안 리터럴로 값 대입
     # 데이터 추가

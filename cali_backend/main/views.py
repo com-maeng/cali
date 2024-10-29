@@ -1,12 +1,13 @@
-"""This class does used to return to JSON."""
+"""This class does used rest_framework and Regular expressions."""
 import re
 
-from django.http import JsonResponse
-from adrf.views import APIView
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .meilisearch_utils import Search, make_documents
+from meili.meilisearch_utils import Search, make_documents
 
 
 class SearchView(APIView):
@@ -22,7 +23,7 @@ class SearchView(APIView):
     @swagger_auto_schema(tags=['검색'],
                          manual_parameters=[q, s],
                          responses={200: 'Success'})
-    async def get(self, request):
+    def get(self, request):
         """
         request 기반 검색 결과 response
 
@@ -44,15 +45,18 @@ class SearchView(APIView):
 
         pattern = r'^[\u4e00-\u9fff\uac00-\ud7a3\s]+$'
         if not re.match(pattern, query):
-            return JsonResponse({"error": "검색어가 한문이나 한글이 아닙니다."}, status=400)
+            return Response(
+                {"error": "검색어가 한문이나 한글이 아닙니다."},
+                status=status.HTTP_400_BAD_REQUEST)
 
+        # search request 마다 불필요 작업 발생(documents added), 불필요 작업 제거
         search = Search()
-        documents = await make_documents()
-        await search.doc_settings(documents)
+        documents = make_documents()
+        search.doc_settings(documents)
 
         results = search.search_character(query, style)
         if not results:
-            return JsonResponse(
-                {"error": "document가 구현되어 있지 않거나 없는 데이터입니다."},
-                status=400)
-        return JsonResponse(results, status=200)
+            return Response({"error": "document가 구현되어 있지 않거나 없는 데이터입니다."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(results, status=status.HTTP_200_OK)
