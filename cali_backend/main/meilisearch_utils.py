@@ -1,7 +1,22 @@
 """This class does used to type hint."""
+import logging
+import os
 from typing import List
+from dotenv import load_dotenv
 
 import meilisearch
+
+LOG_FILE_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    'logs/cali_backend.log')
+
+# docker container error (logs folder)
+logging.basicConfig(
+    filename=LOG_FILE_PATH,
+    filemode='a',
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
 
 class Search:
@@ -23,10 +38,13 @@ class Search:
         Description:
             검색된 정보를 반환한다.
     """
-    client = meilisearch.Client('http://search-server-m:7700')
+    load_dotenv()
+
+    client = meilisearch.Client(
+        'http://search-server-m:7700', os.getenv("MEILI_MASTER_KEY"))
     index = client.index("hanja_index")
 
-    def doc_settings(self, documents: List[dict]):
+    async def doc_settings(self, documents: List[dict]) -> None:
         """
         Meilisearch 초기 index값 세팅
 
@@ -42,11 +60,12 @@ class Search:
         Returns:
             None
         """
-        self.index.add_documents(documents)
+        logging.info('new documents add...')
+        task_info = self.index.add_documents(documents)
+        self.index.wait_for_task(task_info.task_uid)
 
-        self.index.update_filterable_attributes([
-            'style'
-        ])
+        task_info = self.index.update_filterable_attributes(['style'])
+        self.index.wait_for_task(task_info.task_uid)
 
     def suggestions(self, hanja: str = "") -> List[str]:
         """
@@ -107,6 +126,7 @@ async def make_documents() -> List[dict]:
     # 데이터 추가
     hanjas = ["日 날 일", "月 달 월", "火 불 화"]  # 파라미터로 수정 예정
 
+    logging.info('Create new document data...')
     five_style = ["jeonseo", "yeseo", "haeseo", "haengseo", "choseo"]
     documents = []
 

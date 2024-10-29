@@ -4,7 +4,8 @@ services:
       context: ./cali_backend
       dockerfile: Dockerfile
     volumes:
-      - "./cali_backend:/cali:ro"
+      - "./cali_backend:/cali"
+      - "./logs:/cali/logs"
     ports:
       - "127.0.0.1:8000:8000"
     env_file: ".env.dev"
@@ -16,6 +17,10 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+      search-server-m:
+        condition: service_healthy
+    networks:
+      - cali-network
 
   db:
     image: postgres:16-alpine3.20 # Latest minor version
@@ -31,6 +36,8 @@ services:
       timeout: 4s
     volumes:
       - "cali-db-data:/var/lib/postgresql/data"
+    networks:
+      - cali-network
 
   cache:
     image: redis:7.2-alpine3.20
@@ -42,16 +49,42 @@ services:
       timeout: 4s
     volumes:
       - cali-cache-data:/data
+    networks:
+      - cali-network
 
   search-server-m:
     image: getmeili/meilisearch
     ports:
       - "7700:7700"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - "meili-data:/meili_data"
+    environment:
+      - MEILI_ENV=production
+      - MEILI_DB_PATH=/meili_data/ms_db
+      - MEILI_HTTP_ADDR=0.0.0.0:7700
+      - MEILI_MAX_INDEX_SIZE=1073741824
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+    networks:
+      - cali-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+
 
 volumes:
   cali-db-data:
   cali-cache-data:
+  meili-data:
 
-# networks: # 지금은 불필요할 듯
-#   cali-network:
-#     driver: bridge
+networks:
+  cali-network:
+    driver: bridge
