@@ -8,6 +8,7 @@ camel-converter==4.0.1
 certifi==2024.8.30
 charset-normalizer==3.4.0
 colorama==0.4.6
+dependency-injector==4.42.0
 Django==4.2.16
 djangorestframework==3.15.2
 drf-yasg==1.21.8
@@ -45,6 +46,7 @@ redis==5.1.1
 requests==2.32.3
 requests-oauthlib==2.0.0
 rsa==4.9
+six==1.16.0
 sqlparse==0.5.1
 tomli==2.0.2
 typing_extensions==4.12.2

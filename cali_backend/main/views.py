@@ -1,16 +1,24 @@
 """This class does used rest_framework and Regular expressions."""
 import re
 
+from dependency_injector.wiring import inject, Provide
+from cali_backend.containers import Container
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from meili.meilisearch_utils import Search, make_documents
+from meili.meilisearch_utils import SearchAPI
 
 
 class SearchView(APIView):
+
+    @inject
+    def __init__(
+            self, search_api: SearchAPI = Provide[Container.search_api]):
+        super().__init__()
+        self.search_api = search_api
 
     q = openapi.Parameter(
         'q', openapi.IN_PATH, description='query', required=True,
@@ -50,11 +58,8 @@ class SearchView(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
         # search request 마다 불필요 작업 발생(documents added), 불필요 작업 제거
-        search = Search()
-        documents = make_documents()
-        search.doc_settings(documents)
+        results = self.search_api.search_character(query, style)
 
-        results = search.search_character(query, style)
         if not results:
             return Response({"error": "document가 구현되어 있지 않거나 없는 데이터입니다."},
                             status=status.HTTP_400_BAD_REQUEST)
