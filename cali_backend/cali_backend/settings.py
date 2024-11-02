@@ -14,6 +14,12 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from cali_backend.containers import Container
+
+
+# DI container initial settings
+container = Container()
+container.wire(modules=["main.views"])
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
