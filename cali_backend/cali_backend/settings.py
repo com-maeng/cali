@@ -155,5 +155,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # meilisearch
 MEILISEARCH = {
-    os.getenv("MEILI_HOST"),  # MeiliSearch 컨테이너의 주소
+    'HOST': os.getenv("MEILI_HOST"),  # MeiliSearch 컨테이너의 주소
 }
