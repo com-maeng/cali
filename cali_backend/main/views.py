@@ -48,7 +48,7 @@ class SearchView(APIView):
 
         search = Search()
         documents = await make_documents()
-        await search.doc_settings(documents)
+        await search.doc_settings(documents)  # 확인
 
         results = search.search_character(query, style)
         if not results:
