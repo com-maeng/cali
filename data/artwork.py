@@ -26,7 +26,7 @@ class ArtworkDataPipeline:
         self.sheet = self.sheets_service.spreadsheets()  # pylint: disable=no-member
         self.artworks = []
 
-    def __get_new_artworks(self) -> bool:
+    def __get_new_artworks(self):
         sheet_range = '시트1!B:H'
         result = self.sheet.values().get(spreadsheetId=self.spreadsheet_id,
                                          range=sheet_range).execute()
@@ -52,12 +52,6 @@ class ArtworkDataPipeline:
                 artwork.artist_name,
                 artwork.artwork_name
             )
-
-        if not self.artworks:
-            logging.info('새로 적재할 artwork가 없습니다.')
-            return False  # No artworks to update
-
-        return True
 
     def __get_artwork_files(self) -> None:
         for artwork in self.artworks:
@@ -147,18 +141,17 @@ class ArtworkDataPipeline:
         except HttpError as e:
             logging.error(e)
 
-    def activate_pipeline(self) -> bool:
-        if not self.__get_new_artworks():
-            return True
+    def activate_pipeline(self) -> list[Artwork]:
+        self.__get_new_artworks()
+
+        if not self.artworks:
+            return []
 
         self.__get_artwork_files()
 
         for artwork in self.artworks:
+            # TODO: 작업이 실패했을 때에 대한 예외처리
             self.__load_artwork_streams_to_bucket(artwork)
             self.__update_is_loaded_column(artwork)
-            # TODO: 컬럼 업데이트에 실패했을 때에 대한 처리 (버킷-시트 간 정합성 등)
 
-        # TODO
-        # self.__split_artworks_into_hanja()
-        # self.__label_hanja()
-        # self.__load_hanja()
+        return self.artworks
