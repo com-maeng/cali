@@ -45,29 +45,3 @@ def recognize_optical_character(image: Image, lang: str) -> str:
     boxes = pytesseract.image_to_boxes(preprocessed_image, lang=lang)
 
     return boxes
-
-
-def convert_box_coords_from_tesseract_to_pil(
-    image: Image,
-    coords: list[int]
-) -> list[int]:
-    """Tesseract 형식의 box 좌표값을 PIL 형식으로 변환합니다.
-
-    left, right 값은 두 형식 모두 동일하지만, bottom(upper), top(lower) 값은 서로 반대입니다.
-    - Tesseract: left bottom right top
-    - PIL: left upper right lower
-
-    image의 높이값을 활용하여 값이 서로 호환되도록 변형합니다.
-
-    Args:
-        image: 이미지의 높이값을 참고하는 데 활용됩니다.
-        coords: Box 좌표값이 저장된 리스트입니다.
-
-    Retruns:
-        PIL 형식의 box 좌표값으로, [left, upper, right, lower] 으로 구성됩니다.
-    """
-
-    left, bottom, right, top = coords
-    upper, lower = image.size[1] - bottom, image.size[1] - top
-
-    return [left, upper, right, lower]
