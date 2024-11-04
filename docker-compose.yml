@@ -16,6 +16,8 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
+      search-server-m:
+        condition: service_healthy
 
   db:
     image: postgres:16-alpine3.20 # Latest minor version
@@ -43,8 +45,32 @@ services:
     volumes:
       - cali-cache-data:/data
 
+  search-server-m:
+    image: getmeili/meilisearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - "meili-data:/meili_data"
+    environment:
+      - MEILI_ENV=production
+      - MEILI_DB_PATH=/meili_data/ms_db
+      - MEILI_HTTP_ADDR=0.0.0.0:7700
+      - MEILI_MAX_INDEX_SIZE=1073741824
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
 volumes:
   cali-db-data:
   cali-cache-data:
+  meili-data:
+
 # networks: # 지금은 불필요할 듯
 #   cali-network:
