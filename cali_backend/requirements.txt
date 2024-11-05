@@ -1,0 +1,9 @@
+asgiref==3.8.1
+Django==4.2.16
+psycopg==3.2.3
+psycopg-binary==3.2.3
+psycopg-pool==3.2.3
+python-dotenv==1.0.1
+sqlparse==0.5.1
+typing_extensions==4.12.2
+tzdata==2024.2
