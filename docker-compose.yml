@@ -47,6 +47,8 @@ services:
 
   search-server-m:
     image: getmeili/meilisearch
+    ports:
+      - "127.0.0.1:7700:7700"  # 개발 환경에서 포트를 열어놔야 접근이 가능합니다.
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
       interval: 2s
