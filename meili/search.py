@@ -1,6 +1,6 @@
 from typing import List
 
-from meili_utils.config import Config
+from .config import Config
 
 
 class Search:

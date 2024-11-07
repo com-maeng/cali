@@ -4,7 +4,7 @@
 
 - 컨테이너 실행 후 아래 명령어로 검색엔진 실행
     ```bash
-    python -m meili_utils.run_meili
+    python -m meili.run_meili
     ```
 
 - 
