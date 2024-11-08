@@ -1,4 +1,7 @@
-- meilisearch 패키지 위치 
+- meilisearch 패키지 위치 ...
+    ```bash
+    pip install meilisearch
+    ```
 
 - 실행하기 전 *꼭!* 컨테이너 실행
 
@@ -7,4 +10,7 @@
     python -m meili.run_meili
     ```
 
-- 
+#### mock test
+```bash
+pytest meili/tests/test_search_mock.py
+```

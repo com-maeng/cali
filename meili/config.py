@@ -38,7 +38,8 @@ class Config:
         try:
             self.client.get_index("chi")
         except meilisearch.errors.MeilisearchApiError:
-            self.client.create_index("chi")
+            task_info = self.client.create_index("chi")
+            self.index.wait_for_task(task_info.task_uid)
 
     def add_docs(self, documents: List[dict]) -> None:
         """
@@ -74,7 +75,8 @@ class Config:
             None
         """
 
-        self.index.update_filterable_attributes(['style'])
+        task_info = self.index.update_filterable_attributes(['style'])
+        self.index.wait_for_task(task_info.task_uid)
 
 
 # 메일리서치 모듈에서 제거할 예정 메인 작업 리포 이슈 #17

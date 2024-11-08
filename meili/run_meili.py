@@ -14,7 +14,7 @@ def main():
     conf.add_filter()
 
     sch = Search(conf)
-    result = sch.search("불", "yeseo")
+    result = sch.search("달", "yeseo")
 
     print(json.dumps(result, indent=4, ensure_ascii=False))
 
