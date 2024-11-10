@@ -2,7 +2,7 @@ import logging
 
 from dotenv import load_dotenv
 
-from artwork import ArtworkDataPipeline
+from pipelines.artwork import ArtworkDataPipeline
 # from hanja import HanjaDataPipeline
 
 
