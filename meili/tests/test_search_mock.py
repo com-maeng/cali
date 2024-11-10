@@ -67,12 +67,12 @@ class TestSearchMock(unittest.TestCase):
 class TestCreateDocuments(unittest.TestCase):
 
     def test_create_documents_format(self):
+        """문서 생성 테스트, 필드값 확인"""
         hanjas = ["日 날 일", "月 달 월"]
         documents = create_documents(hanjas)
 
         self.assertEqual(len(documents), 10)
 
-        # 각 문서의 필드 확인
         for doc in documents:
             self.assertIn("id", doc)
             self.assertIn("character", doc)
