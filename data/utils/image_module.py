@@ -1,5 +1,6 @@
 """이미지 전처리, OCR, 크롭 등의 이미지 처리 기능이 정의된 모듈입니다."""
 
+import io
 
 import pytesseract
 from PIL import Image
@@ -61,3 +62,12 @@ def crop_image_to_box(image: Image, coords: list[int]) -> Image:
     """
 
     return image
+
+
+def convert_stream_to_webp(file_stream: io.BytesIO) -> io.BytesIO:
+    image = Image.open(file_stream)
+    output_file_stream = io.BytesIO()
+
+    image.save(output_file_stream, format='WEBP')
+
+    return output_file_stream
