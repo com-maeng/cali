@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 
 import meilisearch
@@ -82,17 +83,17 @@ class Config:
 def create_documents(hanjas: list[str]) -> list[dict]:
     """메일리서치 문서 생성
 
-        문자열('한자 훈 음') 리스트를 매개변수로 넣으면 오서를 기준으로 각각 문서를 생성합니다.
+    문자열('한자 훈 음') 리스트를 매개변수로 넣으면 오서를 기준으로 각각 문서를 생성합니다.
 
-        Args:
-            hanjas: List[str] [문자열('한자 훈 음') 리스트] (예: '月 달 월')
+    Args:
+        hanjas: List[str] [문자열('한자 훈 음') 리스트] (예: '月 달 월')
 
-        Raises:
-            ValueError: 문자열 리스트를 넣지 않았을 경우
+    Raises:
+        ValueError: 문자열 리스트를 넣지 않았을 경우
 
-        Returns:
-            List[dict] ('id', 'character', 'meaning', 'style')키값을 담은 리스트를 반환
-        """
+    Returns:
+        List[dict] ('id', 'character', 'meaning', 'style')키값을 담은 리스트를 반환
+    """
 
     five_style = ['jeonseo', 'yeseo', 'haeseo', 'haengseo', 'choseo']
     documents = []
@@ -108,3 +109,38 @@ def create_documents(hanjas: list[str]) -> list[dict]:
         raise Exception(
             '형식에 맞는 문자열 리스트를 넣어주세요.\nList[str] [문자열("한자 훈 음") 리스트] (예: "月 달 월")')
     return documents
+
+
+def hanja_preprocessor() -> list[str]:
+    """메일리서치 문서 생성에 활용할 데이터 전처리
+
+    hanjaDict.json 파일을 읽어 들여, 메일리서치 문서 생성 함수인 create_documents 인자값에 맞는
+    문자열('한자 훈 음') 리스트로 전처리 후 반환합니다.
+
+    Args:
+        None: 인자값이 필요하지 않습니다.
+
+    Returns:
+        List[str] [문자열('한자 훈 음') 리스트를 반환합니다.] (예: '月 달 월')
+    """
+
+    current_file_path = os.path.abspath(__file__)
+    root_dir = os.path.dirname(current_file_path)
+    json_file_path = os.path.join(
+        os.path.dirname(root_dir),
+        'data', 'utils', 'hanjaDic.json')
+
+    with open(json_file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    new_data = []
+    for k, v in data.items():
+        v = v[0]
+        hanja = f'{k} {v['def']} {v['kor']}'
+        new_data.append(hanja)
+
+    return new_data
+
+
+if __name__ == '__main__':
+    hanja_preprocessor()
