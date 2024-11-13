@@ -23,7 +23,7 @@ class Hanja:
     """작품에서 추출된 한자 데이터를 담는 DTO입니다."""
 
     hanja_character: str
-    huneum: str
+    huneums: list[dict[str, str]]  # [{'def': '꾸짖을', 'kor': '갈'}]
     image: Image
     from_artwork: str
     from_artist: str
