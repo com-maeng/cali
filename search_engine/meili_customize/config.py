@@ -57,8 +57,11 @@ class Config:
             None
         """
 
-        task_info = self.index.add_documents(documents)
-        self.index.wait_for_task(task_info.task_uid)
+        try:
+            task_info = self.index.add_documents(documents)
+            self.index.wait_for_task(task_info.task_uid)
+        except Exception as e:
+            print(f'검색엔진 문서 추가에 문제가 생겼습니다.\n\n{e}', flush=True)
 
     def add_filter(self) -> None:
         """구체적인 검색을 위한 필터링 정의
@@ -76,8 +79,11 @@ class Config:
             None
         """
 
-        task_info = self.index.update_filterable_attributes(['style'])
-        self.index.wait_for_task(task_info.task_uid)
+        try:
+            task_info = self.index.update_filterable_attributes(['style'])
+            self.index.wait_for_task(task_info.task_uid)
+        except Exception as e:
+            print(f'검색엔진 필터링 속성을 업데이트하는데 문제가 생겼습니다.\n\n{e}', flush=True)
 
 
 def create_documents(hanjas: list[str]) -> list[dict]:
@@ -99,15 +105,16 @@ def create_documents(hanjas: list[str]) -> list[dict]:
     documents = []
     doc_id = 0
 
-    for hanja in hanjas:
-        for s in five_style:
-            documents.append({'id': doc_id, 'character': hanja,
-                              'meaning': hanja.split(' ')[1], 'style': s})
-            doc_id += 1
+    try:
+        for hanja in hanjas:
+            for s in five_style:
+                documents.append({'id': doc_id, 'character': hanja,
+                                  'meaning': hanja.split(' ')[1], 'style': s})
+                doc_id += 1
+    except Exception as e:
+        print(f'문서 생성에 문제가 생겼습니다.\n\n{e}', flush=True)
+        documents = []
 
-    if not documents:
-        raise Exception(
-            '형식에 맞는 문자열 리스트를 넣어주세요.\nList[str] [문자열("한자 훈 음") 리스트] (예: "月 달 월")')
     return documents
 
 
@@ -125,19 +132,26 @@ def hanja_preprocessor() -> list[str]:
     """
 
     current_file_path = os.path.abspath(__file__)
-    root_dir = os.path.dirname(current_file_path)
+    root_dir = os.path.dirname(os.path.dirname(current_file_path))
     json_file_path = os.path.join(
         os.path.dirname(root_dir),
         'data', 'utils', 'hanjaDic.json')
 
-    with open(json_file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    try:
+        with open(json_file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
 
-    new_data = []
-    for k, v in data.items():
-        v = v[0]
-        hanja = f'{k} {v['def']} {v['kor']}'
-        new_data.append(hanja)
+        new_data = []
+        for k, v in data.items():
+            v = v[0]
+            hanja = f'{k} {v['def']} {v['kor']}'
+            new_data.append(hanja)
+    except FileNotFoundError as e:
+        print(f'hanjaDic.json 파일을 찾지 못했습니다.\n\n{e}', flush=True)
+        new_data = []
+    except Exception as e:
+        print(f'한자 데이터 전처리에 문제가 생겼습니다.\n\n{e}', flush=True)
+        new_data = []
 
     return new_data
 
