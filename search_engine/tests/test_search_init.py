@@ -1,4 +1,4 @@
-from meili.config import create_documents, hanja_preprocessor
+from search_engine.meili_customize.config import create_documents, hanja_preprocessor
 
 
 def test_create_documents_format() -> None:
