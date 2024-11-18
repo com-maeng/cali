@@ -1,7 +1,7 @@
 """한자 문자를 처리하는 다양한 API들이 정의된 모듈입니다."""
 
 
-def get_huneum(hanja_character: str) -> str:
+def get_huneums(hanja_character: str) -> list[dict[str, str]]:
     """입력된 한자 문자의 훈음을 식별하여 반환합니다.
 
     TODO: 로직 구현 (현재 훈음이 아닌 입력값을 그대로 반환)
