@@ -48,7 +48,7 @@ class Config:
         검색 리스트 'documents'를 Meilisearch index에 추가합니다.
 
         Args:
-            documents: list[dict] [검색어 리스트로 dict형의 키값은 'id', 'character', 'meaning', 'style' 입니다.]
+            documents: list[dict] [검색어 리스트로 dict형의 키값은 'id', 'character', 'style' 입니다.]
 
         Raises:
             ValueError: 인자가 조건에 맞지 않는 경우
@@ -98,7 +98,7 @@ def create_documents(hanjas: list[str]) -> list[dict]:
         ValueError: 문자열 리스트를 넣지 않았을 경우
 
     Returns:
-        List[dict] ('id', 'character', 'meaning', 'style')키값을 담은 리스트를 반환
+        List[dict] ('id', 'character', 'style')키값을 담은 리스트를 반환
     """
 
     five_style = ['jeonseo', 'yeseo', 'haeseo', 'haengseo', 'choseo']
@@ -108,8 +108,8 @@ def create_documents(hanjas: list[str]) -> list[dict]:
     try:
         for hanja in hanjas:
             for s in five_style:
-                documents.append({'id': doc_id, 'character': hanja,
-                                  'meaning': hanja.split(' ')[1], 'style': s})
+                documents.append(
+                    {'id': doc_id, 'character': hanja, 'style': s})
                 doc_id += 1
     except Exception as e:
         print(f'문서 생성에 문제가 생겼습니다.\n\n{e}', flush=True)
@@ -154,7 +154,3 @@ def hanja_preprocessor() -> list[str]:
         new_data = []
 
     return new_data
-
-
-if __name__ == '__main__':
-    hanja_preprocessor()
