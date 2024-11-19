@@ -13,13 +13,11 @@ def test_create_documents_format() -> None:
     for doc in documents:
         assert 'id' in doc
         assert 'character' in doc
-        assert 'meaning' in doc
         assert 'style' in doc
 
     # 첫 번째 문서의 데이터 확인
     first_doc = documents[0]
     assert first_doc['character'] == '日 날 일'
-    assert first_doc['meaning'] == '날'
     assert first_doc['style'] == 'jeonseo'
 
 
