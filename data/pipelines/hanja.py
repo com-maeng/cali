@@ -9,7 +9,7 @@ from PIL import Image
 from dtos import Artwork
 from dtos import Hanja
 from utils.image_module import recognize_optical_character, crop_image_to_box
-from utils.hanja_module import get_huneum
+from utils.hanja_module import get_huneums
 
 
 class HanjaDataPipeline:
@@ -53,11 +53,17 @@ class HanjaDataPipeline:
                     coords = list(map(int, [left, bottom, right, top]))
 
                     box_image = crop_image_to_box(image, coords)
-                    huneum = get_huneum(hanja_character)
+                    huneums = get_huneums(hanja_character)
+
+                    if not huneums:
+                        logging.warning(
+                            '훈음 라벨링에 실패하였습니다. "%s"', hanja_character)
+
+                        continue
 
                     self.hanjas.append(Hanja(
                         hanja_character=hanja_character,
-                        huneum=huneum,
+                        huneums=huneums,
                         image=box_image,
                         from_artwork=artwork.artwork_name,
                         from_artist=artwork.artist_name
