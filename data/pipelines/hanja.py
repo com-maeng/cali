@@ -1,6 +1,7 @@
 """한자 데이터 파이프라인의 구현체인 HanjaDataPipeline이 정의된 모듈입니다."""
 
 
+import io
 import logging
 from typing import NoReturn
 
@@ -10,6 +11,7 @@ from dtos import Artwork
 from dtos import Hanja
 from utils.image_module import recognize_optical_character, crop_image_to_box
 from utils.hanja_module import get_huneums
+from client.google_client import StorageClient
 
 
 class HanjaDataPipeline:
@@ -19,6 +21,26 @@ class HanjaDataPipeline:
         self.artworks = artworks
         self.hanjas = []  # list[Hanja]
         self.tesseract_lang = 'chi_tra+chi_tra_vert+chi_sim+chi_sim_vert'
+        self.storage_client = StorageClient()
+        self.hanja_bucket = 'cali-hanja-image'
+
+    def upload_hanja_to_bucket(self, hanja: Hanja) -> NoReturn:
+        """Hanja 데이터를 GCS 버킷에 업로드합니다."""
+
+        buf = io.BytesIO()
+        hanja.image.save(buf, format='WEBP')
+
+        bucket = self.hanja_bucket
+
+        # 흙/토/안진경_다보탑비.webp
+        file_name = f'{hanja.from_artist}_{hanja.from_artwork}.webp'
+
+        self.storage_client.insert_bytes_object_into_bucket(
+            fd=buf,
+            mimitype='image/webp',
+            bucket=bucket,
+            file_name=file_name
+        )
 
     def activate_pipeline(self) -> NoReturn:
         """한자 데이터 파이프라인을 가동하기 위한 트리거 API입니다.
@@ -61,12 +83,22 @@ class HanjaDataPipeline:
 
                         continue
 
-                    self.hanjas.append(Hanja(
+                    # 업로드 로직 변경으로 인한 임시삭제
+                    # self.hanjas.append(Hanja(
+                    #     hanja_character=hanja_character,
+                    #     huneums=huneums,
+                    #     image=box_image,
+                    #     from_artwork=artwork.artwork_name,
+                    #     from_artist=artwork.artist_name
+                    # ))
+
+                    hanja = Hanja(
                         hanja_character=hanja_character,
                         huneums=huneums,
                         image=box_image,
                         from_artwork=artwork.artwork_name,
                         from_artist=artwork.artist_name
-                    ))
+                    )
 
-        # TODO: 로직 구현 (Upload hanjas to GCS, Meilisearch)
+                    self.upload_hanja_to_bucket(hanja)
+                    # TODO: self.upload_hanja_document_to_meilisearch(hanja)
