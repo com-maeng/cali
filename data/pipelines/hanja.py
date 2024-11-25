@@ -7,11 +7,11 @@ from typing import NoReturn
 
 from PIL import Image
 
-from dtos import Artwork
-from dtos import Hanja
-from utils.image_module import recognize_optical_character, crop_image_to_box
-from utils.hanja_module import get_huneums
-from client.google_client import StorageClient
+from data.dtos import Artwork
+from data.dtos import Hanja
+from data.utils.image_module import recognize_optical_character, crop_image_to_box
+from data.utils.hanja_module import get_huneums
+from data.client.google_client import StorageClient
 
 
 class HanjaDataPipeline:

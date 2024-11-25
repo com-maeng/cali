@@ -2,8 +2,8 @@ import logging
 
 from dotenv import load_dotenv
 
-from pipelines.artwork import ArtworkDataPipeline
-from pipelines.hanja import HanjaDataPipeline
+from data.pipelines.artwork import ArtworkDataPipeline
+from data.pipelines.hanja import HanjaDataPipeline
 
 
 logging.basicConfig(
