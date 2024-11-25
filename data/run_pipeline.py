@@ -7,7 +7,7 @@ from pipelines.hanja import HanjaDataPipeline
 
 
 logging.basicConfig(
-    filename='logs/elt_pipeline.log',
+    filename='data/logs/elt_pipeline.log',
     filemode='a',
     format='%(asctime)s - %(levelname)s - %(message)s',
     level=logging.INFO
