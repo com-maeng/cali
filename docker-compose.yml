@@ -10,7 +10,7 @@ services:
     env_file: ".env.dev"
     environment:
       - DEBUG=1
-      - DJANGO_SETTINGS_MODULE=backend.settings # manage.py에서 setdefault 메서드 호출해도 환경변수 설정이 안 됨
+      - DJANGO_SETTINGS_MODULE=cali_backend.settings # manage.py에서 setdefault 메서드 호출해도 환경변수 설정이 안 됨
     depends_on:
       db:
         condition: service_healthy
