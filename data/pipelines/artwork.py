@@ -8,8 +8,8 @@ from googleapiclient.http import MediaIoBaseDownload
 from googleapiclient.http import MediaIoBaseUpload
 from googleapiclient.errors import HttpError
 
-from dtos import Artwork
-from utils.image_module import convert_stream_to_webp
+from data.dtos import Artwork
+from data.utils.image_module import convert_stream_to_webp
 
 
 class ArtworkDataPipeline:
