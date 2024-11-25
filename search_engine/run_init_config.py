@@ -4,7 +4,7 @@ from meili_customize.config import Config, create_documents, hanja_preprocessor
 
 
 logging.basicConfig(
-    filename='logs/search_initial.log',
+    filename='search_engine/logs/search_initial.log',
     filemode='a',
     format='%(asctime)s - %(levelname)s - %(message)s',
     level=logging.INFO
