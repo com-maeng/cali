@@ -3,7 +3,7 @@ import logging
 from dotenv import load_dotenv
 
 from pipelines.artwork import ArtworkDataPipeline
-# from hanja import HanjaDataPipeline
+from pipelines.hanja import HanjaDataPipeline
 
 
 logging.basicConfig(
@@ -25,13 +25,9 @@ def main():
 
     if not artworks:
         logging.info('새로 적재할 artwork가 없습니다.')
-    # 한자 데이터 적재 파이프라인 구현 시 활용될 코드
-    # else:
-    #     hanja_data_pipeline = HanjaDataPipeline(artworks)
-    #     hanjas = hanja_data_pipeline.activate_pipeline()
-
-    #     if not hanjas:
-    #         logging.warning('Artwork에서 분리된 한자 이미지가 없습니다.')
+    else:
+        hanja_data_pipeline = HanjaDataPipeline(artworks)
+        hanja_data_pipeline.activate_pipeline()
 
 
 if __name__ == "__main__":
