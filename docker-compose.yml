@@ -1,16 +1,16 @@
 services:
   was:
     build:
-      context: ./cali_backend
+      context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - "./cali_backend:/cali:ro"
+      - "./backend:/cali:ro"
     ports:
       - "127.0.0.1:8000:8000"
     env_file: ".env.dev"
     environment:
       - DEBUG=1
-      - DJANGO_SETTINGS_MODULE=cali_backend.settings # manage.py에서 setdefault 메서드 호출해도 환경변수 설정이 안 됨
+      - DJANGO_SETTINGS_MODULE=backend.settings # manage.py에서 setdefault 메서드 호출해도 환경변수 설정이 안 됨
     depends_on:
       db:
         condition: service_healthy
@@ -64,6 +64,5 @@ volumes:
   cali-db-data:
   cali-cache-data:
   cali-meili-data:
-
 # networks: # 지금은 불필요할 듯
 #   cali-network:
