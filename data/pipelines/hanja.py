@@ -34,7 +34,9 @@ class HanjaDataPipeline:
         bucket = self.hanja_bucket
 
         # 흙/토/안진경_다보탑비.webp
-        file_name = f'{hanja.from_artist}_{hanja.from_artwork}.webp'
+        file_name = '/'.join([hanja.huneums[0]['def'],
+                              hanja.huneums[0]['kor'],
+                             f'{hanja.from_artist}_{hanja.from_artwork}.webp'])
 
         self.storage_client.insert_bytes_object_into_bucket(
             fd=buf,
@@ -68,7 +70,7 @@ class HanjaDataPipeline:
 
         for artwork in self.artworks:
             for image_stream in artwork.image_streams:
-                image = Image.open(image_stream)
+                image = Image.open(image_stream['image_stream'])
                 boxes = recognize_optical_character(image, self.tesseract_lang)
 
                 for box in boxes.splitlines():
