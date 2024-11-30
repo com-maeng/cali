@@ -1,6 +1,7 @@
 """한자 데이터 파이프라인의 구현체인 HanjaDataPipeline이 정의된 모듈입니다."""
 
 
+import os
 import io
 import logging
 from typing import NoReturn
@@ -22,7 +23,7 @@ class HanjaDataPipeline:
         self.hanjas = []  # list[Hanja]
         self.tesseract_lang = 'chi_tra+chi_tra_vert+chi_sim+chi_sim_vert'
         self.storage_client = StorageClient()
-        self.hanja_bucket = 'cali-hanja-image'
+        self.hanja_bucket = os.getenv('HANJA_BUCKET')
 
     def upload_hanja_to_bucket(self, hanja: Hanja) -> NoReturn:
         """Hanja 데이터를 GCS 버킷에 업로드합니다."""
