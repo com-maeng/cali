@@ -10,7 +10,7 @@ from PIL import Image
 
 from data.dtos import Artwork
 from data.dtos import Hanja
-from data.utils.image_module import recognize_optical_character, crop_image_to_box
+from data.utils.image_module import recognize_optical_character
 from data.utils.hanja_module import get_huneums
 from data.client.google_client import StorageClient
 
@@ -77,7 +77,7 @@ class HanjaDataPipeline:
                     hanja_character, left, bottom, right, top, _ = box.split()
                     coords = list(map(int, [left, bottom, right, top]))
 
-                    box_image = crop_image_to_box(image, coords)
+                    box_image = image.crop(coords)
                     huneums = get_huneums(hanja_character)
 
                     if not huneums:

@@ -48,22 +48,6 @@ def recognize_optical_character(image: Image, lang: str) -> str:
     return boxes
 
 
-def crop_image_to_box(image: Image, coords: list[int]) -> Image:
-    """주어진 좌표를 활용하여 이미지를 Box 형태로 편집하여 반환합니다.
-
-    TODO: 로직 구현 (현재는 원본 이미지를 그대로 반환)
-
-    Args:
-        image: 편집할 원본 이미지입니다.
-        coords: Box 이미지를 만들 때 사용하는 좌표값입니다.
-
-    Returns:
-        원본 이미지를 좌표값을 기준으로 편집한 이미지입니다.
-    """
-
-    return image
-
-
 def convert_stream_to_webp(file_stream: io.BytesIO) -> io.BytesIO:
     image = Image.open(file_stream)
     output_file_stream = io.BytesIO()
