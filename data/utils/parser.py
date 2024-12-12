@@ -1,3 +1,6 @@
+import os
+import sys
+
 import yaml
 
 
@@ -35,7 +38,15 @@ class DotenvParser:
 
 
 if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print('Error: 스크립트 실행 시 Dotenv 파일을 인자로 제공해야 합니다.')
+        sys.exit(1)
+
+    if not os.path.isfile(sys.argv[1]):
+        print(f'Error: Dotenv 파일 {sys.argv[1]}가 존재하지 않거나 비정상적인 파일입니다.')
+        sys.exit(1)
+
     dotenv_handler = DotenvParser()
 
-    data = dotenv_handler.parse_env_file('.env')
-    dotenv_handler.save_to_yaml(data, '.env.yaml')
+    data = dotenv_handler.parse_env_file(sys.argv[1])
+    dotenv_handler.save_to_yaml(data, f'{sys.argv[1]}.yaml')
