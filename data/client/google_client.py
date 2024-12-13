@@ -9,7 +9,10 @@ from googleapiclient.http import MediaIoBaseUpload
 
 class StorageClient:
     def __init__(self):
-        self.service_account_file = os.getenv('SERVICE_ACCOUNT_FILE')
+        self.service_account_file = '/'.join([
+            os.getenv('SECRETS_DIR'),
+            f'{os.getenv('SERVICE_ACCOUNT_KEY_NAME')}.json'
+        ])
         self.creds = Credentials.from_service_account_file(
             self.service_account_file)
         self.storage_service = build('storage', 'v1', credentials=self.creds)
