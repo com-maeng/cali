@@ -20,7 +20,11 @@ cat service_account_key.json | \
     docker login -u _json_key --password-stdin $ARTIFACT_REGISTRY_URL
 
 # Build
-docker build -t $ARTIFACT_REGISTRY_URL/$ARTWORK_DATA_PIPELINE_IMAGE_NAME data
+docker build \
+  --no-cache \
+  --platform linux/amd64 \
+  -t $ARTIFACT_REGISTRY_URL/$ARTWORK_DATA_PIPELINE_IMAGE_NAME \
+  data
 
 # Push
 docker push $ARTIFACT_REGISTRY_URL/$ARTWORK_DATA_PIPELINE_IMAGE_NAME
