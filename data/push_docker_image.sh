@@ -16,7 +16,7 @@ source "$1"
 ARTIFACT_REGISTRY_URL=$ARTIFACT_REGISTRY_REGION/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_REPOSITORY
 
 # Login
-cat service_account_key.json | \
+cat $SECRETS_DIR/$SERVICE_ACCOUNT_KEY_NAME.json | \
     docker login -u _json_key --password-stdin $ARTIFACT_REGISTRY_URL
 
 # Build
