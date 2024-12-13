@@ -15,7 +15,10 @@ from data.utils.image_module import convert_stream_to_webp
 class ArtworkDataPipeline:
     def __init__(self) -> None:
         self.spreadsheet_id = os.getenv('SPREADSHEET_ID')
-        self.service_account_file = os.getenv('SERVICE_ACCOUNT_FILE')
+        self.service_account_file = '/'.join([
+            os.getenv('SECRETS_DIR'),
+            f'{os.getenv('SERVICE_ACCOUNT_KEY_NAME')}.json'
+        ])
         self.creds = Credentials.from_service_account_file(
             self.service_account_file)
 
