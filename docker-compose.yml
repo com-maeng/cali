@@ -6,11 +6,14 @@ services:
     volumes:
       - "./backend:/cali:ro"
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8080:8080"
     env_file: ".env.dev"
     environment:
-      - DEBUG=1
-      - DJANGO_SETTINGS_MODULE=backend.settings # manage.py에서 setdefault 메서드 호출해도 환경변수 설정이 안 됨
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DATABASE_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DATABASE_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
       db:
         condition: service_healthy
