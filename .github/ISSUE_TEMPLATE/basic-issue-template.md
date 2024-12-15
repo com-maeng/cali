@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 
-## Description
+## DESCRIPTION
 
 ## TODO
 
 - [ ] ...
 
-## Note
+## NOTE
