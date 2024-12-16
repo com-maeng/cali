@@ -15,3 +15,24 @@ service_account_key*.json
 
 # Logs
 *.log
+
+### Spring Boot ###
+HELP.md
+
+### Java ###
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+### Gradle ###
+.gradle
+build/
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
