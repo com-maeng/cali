@@ -5,7 +5,10 @@ google-api-core==2.22.0
 google-api-python-client==2.151.0
 google-auth==2.36.0
 google-auth-httplib2==0.2.0
+google-cloud-vision==3.9.0
 googleapis-common-protos==1.65.0
+grpcio==1.68.1
+grpcio-status==1.68.1
 httplib2==0.22.0
 idna==3.10
 iniconfig==2.0.0
