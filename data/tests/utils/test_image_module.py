@@ -54,9 +54,7 @@ def test_recognize_optical_character_with_chi_models():
     """이미지 OCR 메서드를 Tesseract 한자 언어 모델을 활용해 테스트합니다."""
 
     test_image = get_test_image()
-    lang = 'chi_sim+chi_sim_vert+chi_tra+chi_tra_vert'
-
-    boxes = recognize_optical_character(test_image, lang=lang)
+    boxes = recognize_optical_character(test_image)
 
     assert isinstance(boxes, str), '인식된 문자들의 정보를 담는 값의 타입이 잘못되었습니다.'
 
@@ -74,9 +72,7 @@ def test_recognize_optical_character_with_chi_models_without_characters():
     """이미지 OCR 메서드를 Tesseract 한자 언어 모델과 빈 이미지를 활용해 테스트합니다."""
 
     test_image = get_test_image(characters=False)
-    lang = 'chi_sim+chi_sim_vert+chi_tra+chi_tra_vert'
-
-    boxes = recognize_optical_character(test_image, lang=lang)
+    boxes = recognize_optical_character(test_image)
 
     assert isinstance(boxes, str), '인식된 문자들의 정보를 담는 값의 타입이 잘못되었습니다.'
     assert boxes == '', '잘못된 문자 인식이 이루어졌습니다.'

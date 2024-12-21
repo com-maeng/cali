@@ -23,7 +23,6 @@ class HanjaDataPipeline:
     def __init__(self, artworks: list[Artwork]) -> None:
         self.artworks = artworks
         self.hanjas = []  # list[Hanja]
-        self.tesseract_lang = 'chi_tra+chi_tra_vert+chi_sim+chi_sim_vert'
         self.storage_client = StorageClient()
         self.hanja_bucket = os.getenv('HANJA_BUCKET')
 
@@ -74,7 +73,7 @@ class HanjaDataPipeline:
         for artwork in self.artworks:
             for image_stream in artwork.image_streams:
                 image = Image.open(image_stream['image_stream'])
-                boxes = recognize_optical_character(image, self.tesseract_lang)
+                boxes = recognize_optical_character(image)
 
                 for box in boxes.splitlines():
                     hanja_character, left, bottom, right, top, _ = box.split()
