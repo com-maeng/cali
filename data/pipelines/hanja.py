@@ -5,6 +5,8 @@ import os
 import io
 import logging
 from typing import NoReturn
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from PIL import Image
 
@@ -32,11 +34,12 @@ class HanjaDataPipeline:
         hanja.image.save(buf, format='WEBP')
 
         bucket = self.hanja_bucket
+        local_time_with_tz = datetime.now(ZoneInfo('Asia/Seoul')).isoformat()
 
-        # 흙/토/안진경_다보탑비.webp
+        # 흙/토/안진경_다보탑비_YYYY-MM-DDTHH:MM:SS+09:00.webp
         file_name = '/'.join([hanja.huneums[0]['def'],
                               hanja.huneums[0]['kor'],
-                             f'{hanja.from_artist}_{hanja.from_artwork}.webp'])
+                             f'{hanja.from_artist}_{hanja.from_artwork}_{local_time_with_tz}.webp'])
 
         self.storage_client.insert_bytes_object_into_bucket(
             fd=buf,
