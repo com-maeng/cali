@@ -35,17 +35,21 @@ class HanjaDataPipeline:
         bucket = self.hanja_bucket
         local_time_with_tz = datetime.now(ZoneInfo('Asia/Seoul')).isoformat()
 
-        # 흙/토/안진경_다보탑비_YYYY-MM-DDTHH:MM:SS+09:00.webp
-        file_name = '/'.join([hanja.huneums[0]['def'],
-                              hanja.huneums[0]['kor'],
-                             f'{hanja.from_artist}_{hanja.from_artwork}_{local_time_with_tz}.webp'])
+        for huneum in hanja.huneums:
+            # 흙/토/안진경_다보탑비_YYYY-MM-DDTHH:MM:SS+09:00.webp
+            file_name = '/'.join([
+                huneum['def'],
+                huneum['kor'],
+                f'{hanja.from_artist}_{hanja.from_artwork}_{
+                    local_time_with_tz}.webp'
+            ])
 
-        self.storage_client.insert_bytes_object_into_bucket(
-            fd=buf,
-            mimitype='image/webp',
-            bucket=bucket,
-            file_name=file_name
-        )
+            self.storage_client.insert_bytes_object_into_bucket(
+                fd=buf,
+                mimitype='image/webp',
+                bucket=bucket,
+                file_name=file_name
+            )
 
     def activate_pipeline(self) -> NoReturn:
         """한자 데이터 파이프라인을 가동하기 위한 트리거 API입니다.
