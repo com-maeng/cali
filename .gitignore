@@ -36,3 +36,6 @@ build/
 
 # Cache of project
 .gradletasknamecache
+
+# Xcode
+xcuserdata/
