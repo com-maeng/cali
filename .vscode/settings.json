@@ -10,5 +10,7 @@
   },
   "editor.formatOnSave": true,
   "pylint.importStrategy": "useBundled",
-  "python.languageServer": "Pylance"
+  "python.languageServer": "Pylance",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "files.autoSave": "afterDelay",
 }
