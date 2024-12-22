@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-CaliApplication<backend>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend",
+      "mainClass": "com.cali.CaliApplication",
+      "projectName": "backend",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
