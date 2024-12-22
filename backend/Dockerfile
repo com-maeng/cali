@@ -7,6 +7,4 @@ COPY gradlew settings.gradle build.gradle ./
 
 RUN chmod +x ./gradlew
 
-RUN apk add --no-cache inotify-tools
-
 CMD ["./gradlew", "bootRun", "--no-daemon"]
