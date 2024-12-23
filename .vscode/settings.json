@@ -11,6 +11,5 @@
   "editor.formatOnSave": true,
   "pylint.importStrategy": "useBundled",
   "python.languageServer": "Pylance",
-  "java.configuration.updateBuildConfiguration": "automatic",
-  "files.autoSave": "afterDelay",
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
