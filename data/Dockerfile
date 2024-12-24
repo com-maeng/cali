@@ -1,9 +1,6 @@
 FROM python:3.12-bookworm
 
-RUN <<EOF
-apt update && \
-apt install -y tesseract-ocr-chi-sim tesseract-ocr-chi-sim-vert tesseract-ocr-chi-tra tesseract-ocr-chi-tra-vert
-EOF
+RUN apt update
 
 WORKDIR /cali
 COPY . ./data
