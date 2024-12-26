@@ -80,10 +80,20 @@ class HanjaDataPipeline:
                 boxes = recognize_optical_character(image)
 
                 for box in boxes.splitlines():
-                    hanja_character, left, bottom, right, top, _ = box.split()
+                    hanja_character, left, bottom, right, top, _ = box.split(
+                        ', ')
                     coords = list(map(int, [left, bottom, right, top]))
 
-                    box_image = image.crop(coords)
+                    try:
+                        box_image = image.crop(coords)
+                    except ValueError as e:
+                        logging.error(
+                            '%s | %s | %s',
+                            e,
+                            hanja_character,
+                            ', '.join(list(map(str, coords)))
+                        )
+
                     huneums = get_huneums(hanja_character)
 
                     if not huneums:
