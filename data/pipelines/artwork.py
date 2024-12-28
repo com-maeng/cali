@@ -1,6 +1,7 @@
 import os
 import io
 import logging
+import threading
 
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -56,7 +57,31 @@ class ArtworkDataPipeline:
                 artwork.artwork_name
             )
 
+    def get_single_artwork_image(self, file: ..., artwork: Artwork) -> None:
+        drive_service = build('drive', 'v3', credentials=self.creds)
+        request = drive_service.files().\
+            get_media(fileId=file['id'])  # pylint: disable=no-member
+        image_stream = io.BytesIO()
+        downloader = MediaIoBaseDownload(image_stream, request)
+
+        logging.info('Downloading %s ... 0%%', file['name'])
+
+        while True:
+            status, done = downloader.next_chunk()
+            logging.info('Downloading %s ... %d%%',
+                         file['name'], int(status.progress() * 100))
+
+            if done:
+                break
+
+        artwork.image_streams.append({
+            'file_name': file['name'],
+            'image_stream': image_stream
+        })
+
     def __get_artwork_files(self) -> None:
+        threads = []
+
         for artwork in self.artworks:
             folder_id = artwork.drive_url.replace(
                 'https://drive.google.com/drive/folders/', '')
@@ -69,27 +94,15 @@ class ArtworkDataPipeline:
             ).execute()['files']
 
             for file in files:
-                request = self.drive_service.files().get_media(  # pylint: disable=no-member
-                    fileId=file['id'])
-                image_stream = io.BytesIO()
-                downloader = MediaIoBaseDownload(image_stream, request)
+                thread = threading.Thread(
+                    target=self.get_single_artwork_image,
+                    args=(file, artwork)
+                )
+                threads.append(thread)
+                thread.start()
 
-                logging.info('Downloading %s ... 0%%', file['name'])
-
-                while True:
-                    # TODO: 다운로드 API 호출 예외처리 (timeout, etc.)
-                    status, done = downloader.next_chunk()
-
-                    logging.info('Downloading %s ... %d%%',
-                                 file['name'], int(status.progress() * 100))
-
-                    if done is True:
-                        break
-
-                artwork.image_streams.append({
-                    'file_name': file['name'],
-                    'image_stream': image_stream
-                })
+        for thread in threads:
+            thread.join()
 
     def __load_artwork_streams_to_bucket(self, artwork: Artwork) -> ...:
         for stream in artwork.image_streams:
