@@ -104,17 +104,33 @@ class ArtworkDataPipeline:
         for thread in threads:
             thread.join()
 
+    def upload_single_artwork_image(
+        self,
+        converted_image_stream: io.BytesIO,
+        file_name_with_path: str
+    ) -> None:
+        storage_service = build('storage', 'v1', credentials=self.creds)
+        uploader = MediaIoBaseUpload(
+            converted_image_stream,
+            mimetype='image/webp',
+            resumable=True,
+        )
+        storage_service.objects().insert(  # pylint: disable=no-member
+            bucket=os.getenv('ARTWORK_BUCKET'),
+            media_body=uploader,
+            body={'name': file_name_with_path}
+        ).execute()
+
+        logging.info('Uploaded %s', file_name_with_path)
+
     def __load_artwork_streams_to_bucket(self, artwork: Artwork) -> ...:
+        threads = []
+
         for stream in artwork.image_streams:
             file_name = stream['file_name']
             image_stream = stream['image_stream']
-
             converted_image_stream = convert_stream_to_webp(image_stream)
-            uploader = MediaIoBaseUpload(
-                converted_image_stream,
-                mimetype='image/webp',
-                resumable=True,
-            )
+
             file_name_without_ext = file_name.rpartition('.')[0]
             file_name_with_path = '/'.join([
                 artwork.artist_name,
@@ -122,15 +138,15 @@ class ArtworkDataPipeline:
                 file_name_without_ext + '.webp',
             ])
 
-            self.storage_service.objects().insert(  # pylint: disable=no-member
-                bucket=os.getenv('ARTWORK_BUCKET'),
-                media_body=uploader,
-                body={
-                    'name': file_name_with_path
-                }
-            ).execute()  # TODO: 업로드 API 호출 예외처리 (timeout, etc.)
+            thread = threading.Thread(
+                target=self.upload_single_artwork_image,
+                args=(converted_image_stream, file_name_with_path)
+            )
+            threads.append(thread)
+            thread.start()
 
-            logging.info('Uploaded %s', file_name_with_path)
+        for thread in threads:
+            thread.join()
 
     def __update_is_loaded_column(self, artwork: Artwork):
         range_name = f'시트1!H{artwork.row_num + 2}'  # 1, 2번째 컬럼이 포함된 행 번호
