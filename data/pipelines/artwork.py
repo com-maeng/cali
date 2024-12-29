@@ -32,8 +32,10 @@ class ArtworkDataPipeline:
 
     def __get_new_artworks(self):
         sheet_range = '시트1!B:H'
-        result = self.sheet.values().get(spreadsheetId=self.spreadsheet_id,
-                                         range=sheet_range).execute()
+        result = self.sheet.values().get(
+            spreadsheetId=self.spreadsheet_id,
+            range=sheet_range
+        ).execute(num_retries=5)
 
         for idx, row in enumerate(result['values'][2:]):  # 0, 1번째 row는 패스
             if row[-1] == 'Y':
@@ -67,7 +69,7 @@ class ArtworkDataPipeline:
         logging.info('Downloading %s ... 0%%', file['name'])
 
         while True:
-            status, done = downloader.next_chunk()
+            status, done = downloader.next_chunk(num_retries=5)
             logging.info('Downloading %s ... %d%%',
                          file['name'], int(status.progress() * 100))
 
@@ -91,7 +93,7 @@ class ArtworkDataPipeline:
             files = self.drive_service.files().list(  # pylint: disable=no-member
                 q=q,
                 orderBy='name_natural'
-            ).execute()['files']
+            ).execute(num_retries=5)['files']
 
             for file in files:
                 thread = threading.Thread(
@@ -119,7 +121,7 @@ class ArtworkDataPipeline:
             bucket=os.getenv('ARTWORK_BUCKET'),
             media_body=uploader,
             body={'name': file_name_with_path}
-        ).execute()
+        ).execute(num_retries=5)
 
         logging.info('Uploaded %s', file_name_with_path)
 
@@ -164,7 +166,7 @@ class ArtworkDataPipeline:
                     body=body,
                     valueInputOption='USER_ENTERED'
                 )
-                .execute()
+                .execute(num_retries=5)
             )
             logging.info(
                 'Cell %s has been updated to \'Y\'',

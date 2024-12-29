@@ -38,7 +38,7 @@ class StorageClient:
             body={
                 'name': file_name
             }
-        ).execute()
+        ).execute(num_retries=5)
 
 
 class VisionAPIClient:
