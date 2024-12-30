@@ -4,6 +4,7 @@
 import os
 import io
 import logging
+import threading
 from typing import NoReturn
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -23,12 +24,12 @@ class HanjaDataPipeline:
     def __init__(self, artworks: list[Artwork]) -> None:
         self.artworks = artworks
         self.hanjas = []  # list[Hanja]
-        self.storage_client = StorageClient()
         self.hanja_bucket = os.getenv('HANJA_BUCKET')
 
     def upload_hanja_to_bucket(self, hanja: Hanja) -> NoReturn:
         """Hanja 데이터를 GCS 버킷에 업로드합니다."""
 
+        storage_client = StorageClient()
         buf = io.BytesIO()
         hanja.image.save(buf, format='WEBP')
 
@@ -44,7 +45,7 @@ class HanjaDataPipeline:
                     local_time_with_tz}.webp'
             ])
 
-            self.storage_client.insert_bytes_object_into_bucket(
+            storage_client.insert_bytes_object_into_bucket(
                 fd=buf,
                 mimitype='image/webp',
                 bucket=bucket,
@@ -73,6 +74,7 @@ class HanjaDataPipeline:
         """
 
         logging.info('Activate HanjaDataPipeline...')
+        threads = []
 
         for artwork in self.artworks:
             for image_stream in artwork.image_streams:
@@ -80,10 +82,20 @@ class HanjaDataPipeline:
                 boxes = recognize_optical_character(image)
 
                 for box in boxes.splitlines():
-                    hanja_character, left, bottom, right, top, _ = box.split()
+                    hanja_character, left, bottom, right, top, _ = box.split(
+                        ', ')
                     coords = list(map(int, [left, bottom, right, top]))
 
-                    box_image = image.crop(coords)
+                    try:
+                        box_image = image.crop(coords)
+                    except ValueError as e:
+                        logging.error(
+                            '%s | %s | %s',
+                            e,
+                            hanja_character,
+                            ', '.join(list(map(str, coords)))
+                        )
+
                     huneums = get_huneums(hanja_character)
 
                     if not huneums:
@@ -91,15 +103,6 @@ class HanjaDataPipeline:
                             '훈음 라벨링에 실패하였습니다. "%s"', hanja_character)
 
                         continue
-
-                    # 업로드 로직 변경으로 인한 임시삭제
-                    # self.hanjas.append(Hanja(
-                    #     hanja_character=hanja_character,
-                    #     huneums=huneums,
-                    #     image=box_image,
-                    #     from_artwork=artwork.artwork_name,
-                    #     from_artist=artwork.artist_name
-                    # ))
 
                     hanja = Hanja(
                         hanja_character=hanja_character,
@@ -109,5 +112,12 @@ class HanjaDataPipeline:
                         from_artist=artwork.artist_name
                     )
 
-                    self.upload_hanja_to_bucket(hanja)
-                    # TODO: self.upload_hanja_document_to_meilisearch(hanja)
+                    thread = threading.Thread(
+                        target=self.upload_hanja_to_bucket,
+                        args=(hanja,)  # Iterable argument
+                    )
+                    threads.append(thread)
+                    thread.start()
+
+        for thread in threads:
+            thread.join()
