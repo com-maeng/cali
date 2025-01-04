@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.meilisearch.sdk.Client;
 import com.meilisearch.sdk.Index;
+import com.meilisearch.sdk.SearchRequest;
 import com.meilisearch.sdk.exceptions.MeilisearchApiException;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class MeilisearchService {
 
     public ArrayList<HashMap<String, Object>> search(String query) throws MeilisearchApiException {
         Index index = meilisearchClient.getIndex("chi");
-        return index.search(query).getHits();
+        return index.search(new SearchRequest(query)
+                .setLimit(5)).getHits();
     }
 }

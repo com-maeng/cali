@@ -1,6 +1,8 @@
 package com.cali.service;
 
+import java.util.List;
+
 public interface SearchService {
 
-    public String getSearchResult(String query);
+    public List<String> getSearchResult(String query);
 }

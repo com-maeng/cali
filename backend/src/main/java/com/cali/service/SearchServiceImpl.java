@@ -1,5 +1,9 @@
 package com.cali.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.cali.meilisearch.MeilisearchService;
@@ -14,14 +18,15 @@ public class SearchServiceImpl implements SearchService {
     private final MeilisearchService meilisearchService;
 
     @Override
-    public String getSearchResult(String query) {
+    public List<String> getSearchResult(String query) {
 
-        String searchResult = "";
-
+        List<String> searchResult = new ArrayList<String>();
         try {
-            searchResult = meilisearchService.search(query).get(0).get("title").toString();
+            searchResult = meilisearchService.search(query).stream()
+                    .map(result -> result.get("hanja_hun_eum").toString())
+                    .collect(Collectors.toList());
         } catch (MeilisearchApiException e) {
-            searchResult = "search API Exception";
+            System.err.printf("meilisearch api exception!\n%s", e.toString());
         }
         return searchResult;
     }
