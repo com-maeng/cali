@@ -1,13 +1,12 @@
 import logging
 
-from meili_customize.config import Config, create_documents, hanja_preprocessor
+from search_engine.meili_customize.config import Config
+from search_engine.meili_customize.config import create_documents, hanja_preprocessor
 
 
 logging.basicConfig(
-    filename='search_engine/logs/search_initial.log',
-    filemode='a',
     format='%(asctime)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    level=logging.DEBUG
 )
 
 
@@ -23,7 +22,6 @@ def main():
 
     logging.info('Add indexed documents, filtering define......')
     conf.add_docs(documents)
-    conf.add_filter()
 
 
 if __name__ == '__main__':
