@@ -1,7 +1,3 @@
-# SQLite3
-*.sqlite3
-*.db
-
 # macOS
 .DS_Store
 .localized
