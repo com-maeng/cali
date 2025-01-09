@@ -29,18 +29,19 @@ class Config:
     def __init__(self):
         load_dotenv()
         self.client = meilisearch.Client(
-            'http://localhost:7700', os.getenv('MEILI_MASTER_KEY'))
-        self.index = self.client.index('chi')
+            'http://localhost:7700',
+            os.getenv('MEILI_MASTER_KEY')
+        )
+        self.index = self.client.index('hanja')
         self._initialize_index()
 
     def _initialize_index(self):
         """인덱스가 존재하지 않을 경우 생성"""
 
-        try:
-            self.client.get_index('chi')
-        except meilisearch.errors.MeilisearchApiError:
-            task_info = self.client.create_index('chi')
-            self.index.wait_for_task(task_info.task_uid)
+        self.client.create_index(
+            'hanja',
+            {'primaryKey': 'hanja_id'}
+        )
 
     def add_docs(self, documents: list[dict]) -> None:
         """검색엔진의 색인된 문서를 추가 및 정의
@@ -63,28 +64,6 @@ class Config:
         except Exception as e:
             print(f'검색엔진 문서 추가에 문제가 생겼습니다.\n\n{e}', flush=True)
 
-    def add_filter(self) -> None:
-        """구체적인 검색을 위한 필터링 정의
-
-        검색어에 필요한 filter의 field값을 정의합니다.
-        field값은 'documents' 리스트의 dict형 키값을 기반으로 정의합니다.
-
-        Args:
-            None
-
-        Raises:
-            ValueError: 문서가 정의되지 않을 경우
-
-        Returns:
-            None
-        """
-
-        try:
-            task_info = self.index.update_filterable_attributes(['style'])
-            self.index.wait_for_task(task_info.task_uid)
-        except Exception as e:
-            print(f'검색엔진 필터링 속성을 업데이트하는데 문제가 생겼습니다.\n\n{e}', flush=True)
-
 
 def create_documents(hanjas: list[str]) -> list[dict]:
     """메일리서치 문서 생성
@@ -101,16 +80,16 @@ def create_documents(hanjas: list[str]) -> list[dict]:
         List[dict] ('id', 'character', 'style')키값을 담은 리스트를 반환
     """
 
-    five_style = ['jeonseo', 'yeseo', 'haeseo', 'haengseo', 'choseo']
     documents = []
-    doc_id = 0
 
     try:
+        hanja_id = 1
         for hanja in hanjas:
-            for s in five_style:
-                documents.append(
-                    {'id': doc_id, 'character': hanja, 'style': s})
-                doc_id += 1
+            documents.append({
+                'hanja_id': hanja_id,
+                'hanja_hun_eum': hanja
+            })
+            hanja_id += 1
     except Exception as e:
         print(f'문서 생성에 문제가 생겼습니다.\n\n{e}', flush=True)
         documents = []
@@ -131,21 +110,19 @@ def hanja_preprocessor() -> list[str]:
         List[str] [문자열('한자 훈 음') 리스트를 반환합니다.] (예: '月 달 월')
     """
 
-    current_file_path = os.path.abspath(__file__)
-    root_dir = os.path.dirname(os.path.dirname(current_file_path))
-    json_file_path = os.path.join(
-        os.path.dirname(root_dir),
-        'data', 'utils', 'hanjaDic.json')
-
     try:
-        with open(json_file_path, 'r', encoding='utf-8') as file:
+        with open('/cali/search_engine/hanjaDic.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
 
         new_data = []
-        for k, v in data.items():
-            v = v[0]
-            hanja = f'{k} {v['def']} {v['kor']}'
-            new_data.append(hanja)
+        for hanja_character, huneums in data.items():
+            for huneum in huneums:
+                hanja_hun_eum = ' '.join([
+                    hanja_character,
+                    huneum['def'],
+                    huneum['kor']]
+                )
+                new_data.append(hanja_hun_eum)
     except FileNotFoundError as e:
         print(f'hanjaDic.json 파일을 찾지 못했습니다.\n\n{e}', flush=True)
         new_data = []
