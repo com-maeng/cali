@@ -19,7 +19,7 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
-      search-server-m:
+      search-engine:
         condition: service_healthy
 
   db:
@@ -48,7 +48,7 @@ services:
     volumes:
       - cali-cache-data:/data
 
-  search-server-m:
+  search-engine:
     image: getmeili/meilisearch
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
@@ -56,16 +56,14 @@ services:
       retries: 4
       start_period: 2s
       timeout: 4s
+    ports:
+      - 7700:7700 # To connect from local machine
     volumes:
-      - "cali-meili-data:/meili_data"
-    environment:
-      - MEILI_DB_PATH=/meili_data/ms_db
-      - MEILI_HTTP_ADDR=0.0.0.0:7700
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - ./search_engine:/cali/search_engine
+    command: "sh /cali/search_engine/run_dev.sh"
 
 volumes:
   cali-db-data:
   cali-cache-data:
-  cali-meili-data:
 # networks: # 지금은 불필요할 듯
 #   cali-network:
