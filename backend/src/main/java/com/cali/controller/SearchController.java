@@ -26,7 +26,7 @@ public class SearchController {
 
     @GetMapping(value = "/image", produces = "image/webp")
     public byte[] getHanjaImage(@RequestParam(value = "q") String query,
-            @RequestParam(value = "s", defaultValue = "전서") String style) {
+            @RequestParam(value = "s") String style) {
         return searchService.getHanjaImage(query, style);
     }
 
