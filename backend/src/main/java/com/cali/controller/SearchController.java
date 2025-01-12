@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,8 +25,8 @@ public class SearchController {
         return searchService.getSearchResult(query);
     }
 
-    @GetMapping(value = "/image", produces = "image/webp")
-    public byte[] getHanjaImage(@RequestParam(value = "q") String query,
+    @GetMapping(value = "/images")
+    public ResponseEntity<String> getHanjaImage(@RequestParam(value = "q") String query,
             @RequestParam(value = "s") String style) {
         return searchService.getHanjaImage(query, style);
     }

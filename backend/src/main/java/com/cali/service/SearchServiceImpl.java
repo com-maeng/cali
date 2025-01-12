@@ -2,9 +2,12 @@ package com.cali.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.cali.gcp.GcsClient;
@@ -30,32 +33,39 @@ public class SearchServiceImpl implements SearchService {
                     .map(result -> result.get("hanja_hun_eum").toString())
                     .collect(Collectors.toList());
         } catch (MeilisearchApiException e) {
-            System.err.printf("meilisearch api exception!\n%s", e.toString());
+            System.err.printf("Meilisearch API exception!\n%s", e.toString());
         }
         return searchResult;
     }
 
     @Override
-    public byte[] getHanjaImage(String query, String style) {
-        String bucketName = System.getenv("HANJA_BUCKET");
-        // query: 環 고리 환
-        String[] parts = query.split(" ");
-        String extractedPart = parts[1] + "/" + parts[2];
-        String fileName = "/-_사신비_2024-12-29T16_13_52.450855+09_00.webp";
-        String objectName = extractedPart + "/" + style + fileName;
+    public ResponseEntity<String> getHanjaImage(String query, String style) {
+        List<String> images = new ArrayList<>();
 
-        byte[] hanjaImage = new byte[] {};
         try {
             Storage storage = GcsClient.getGcsStorage();
-            Blob blob = storage.get(bucketName, objectName);
-            if (blob == null) {
-                throw new RuntimeException("Object not found: " + objectName);
-            }
+            String bucketName = System.getenv("HANJA_BUCKET");
+            // query: 環 고리 환
+            String[] parts = query.split(" ");
+            String folderPath = parts[1] + "/" + parts[2] + "/" + style;
 
-            hanjaImage = blob.getContent();
+            Iterable<Blob> blobs = storage.list(bucketName).iterateAll();
+            for (Blob blob : blobs) {
+                if (blob.getName().startsWith(folderPath) && blob.getName().endsWith(".webp")) {
+                    byte[] imageBytes = blob.getContent();
+                    String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                    images.add("<img src='data:image/jpeg;base64," + base64Image + "' alt='" + blob.getName() + "'/>");
+                }
+            }
         } catch (IOException e) {
-            System.err.printf("GCS bucket api exception!\n%s", e.toString());
+            System.err.printf("GCS bucket API exception!\n%s", e.toString());
         }
-        return hanjaImage;
+
+        if (images.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        String htmlResponse = "<html><body>" + String.join("<br/>", images) + "</body></html>";
+        return ResponseEntity.ok().body(htmlResponse);
     }
+
 }
