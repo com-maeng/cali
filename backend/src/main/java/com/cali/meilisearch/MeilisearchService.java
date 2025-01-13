@@ -19,7 +19,7 @@ public class MeilisearchService {
     private final Client meilisearchClient;
 
     public ArrayList<HashMap<String, Object>> search(String query) throws MeilisearchApiException {
-        Index index = meilisearchClient.getIndex("chi");
+        Index index = meilisearchClient.getIndex("hanja");
         return index.search(new SearchRequest(query)
                 .setLimit(5)).getHits();
     }
