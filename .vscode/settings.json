@@ -5,6 +5,9 @@
   "[markdown][json][jsonc][dockercompose]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[javascript][javascriptreact][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   },
