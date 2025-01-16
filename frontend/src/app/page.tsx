@@ -2,17 +2,17 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="w-full h-dvh flex justify-center items-center">
-      <main className="w-full h-full flex flex-col items-center">
+    <div className="w-[530] h-dvh flex justify-center items-center bg-[#f7f8f9]">
+      <main className="w-full h-full flex flex-col items-center justify-center">
         <Image 
           src="/cali_logo.svg" 
           alt="캘리" 
           width={111}
           height={54}
           priority={true}
-          className="mt-[29.31vh]"
+          className=""
         />
-        <div className="absolute top-[39.4vh] w-[80%]">
+        <div className="w-[80%] my-11">
           <div className="relative flex items-center">
             <input 
               type="text"
@@ -37,7 +37,7 @@ export default function Home() {
             </div> */}
           </div>
         </div>
-        <div className="absolute top-[52.21vh] flex flex-col items-center w-full">
+        <div className="top-[52.21vh] flex flex-col items-center w-full">
           <Image 
             src="/home_deco_jeonseo.svg" 
             alt="데코_전서체" 
