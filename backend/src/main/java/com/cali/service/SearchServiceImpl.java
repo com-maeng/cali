@@ -35,12 +35,10 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<ImageResponse> getHanjaImages(String query, String style) {
-        String bucketName = System.getenv("HANJA_BUCKET");
-
         String[] parts = query.split(" ");
         String folderPath = parts[1] + "/" + parts[2] + "/" + style;
 
-        return gcsService.getImages(bucketName, folderPath);
+        return gcsService.getImages(folderPath);
     }
 
 }

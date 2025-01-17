@@ -17,7 +17,8 @@ public class GcsService {
 
     private final Storage gcsClient;
 
-    public List<ImageResponse> getImages(String bucketName, String folderPath) {
+    public List<ImageResponse> getImages(String folderPath) {
+        String bucketName = System.getenv("HANJA_BUCKET");
         List<ImageResponse> images = new ArrayList<>();
 
         Iterable<Blob> blobs = gcsClient.list(bucketName).iterateAll();
