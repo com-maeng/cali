@@ -2,14 +2,16 @@ package com.cali.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cali.repository.ImageResponse;
 import com.cali.service.SearchServiceImpl;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@Validated
 public class SearchController {
 
     private final SearchServiceImpl searchService;
@@ -27,8 +30,8 @@ public class SearchController {
     }
 
     @GetMapping(value = "/images")
-    public ResponseEntity<List<ImageResponse>> getHanjaImages(@RequestParam(value = "q") String query,
-            @RequestParam(value = "s") String style) {
+    public ResponseEntity<?> getHanjaImages(@Valid @RequestParam(value = "q") @NotBlank String query,
+            @Valid @RequestParam(value = "s") @NotBlank String style) {
         return ResponseEntity.ok().body(searchService.getHanjaImages(query, style));
     }
 
