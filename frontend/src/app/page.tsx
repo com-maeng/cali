@@ -18,8 +18,8 @@ export default function Home() {
             <Image
               src="/search_logo.svg"
               alt="검색"
-              width={22}
-              height={22}
+              width={20}
+              height={20}
               className="absolute ml-5"
             />
             <input
