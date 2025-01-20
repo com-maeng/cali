@@ -81,6 +81,7 @@ export default function Search() {
             onChange={handleUserInputChange}
             placeholder="한글 또는 한자를 입력하세요"
             className="w-full h-full py-3.5 pl-12 rounded-full border-none text-base placeholder:text-[#ADB5BD] shadow-[0_2px_8px_rgba(0,0,0,0.08)] focus:outline-none"
+            autoFocus
           />
         </div>
       </div>
