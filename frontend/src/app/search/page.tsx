@@ -57,7 +57,7 @@ export default function Search() {
   };
 
   return (
-    <div className="w-[530] h-dvh flex flex-col justify-start items-start bg-[#f7f8f9]">
+    <div className="w-full h-full flex flex-col justify-start items-start">
       <div className="w-full flex items-center justify-start">
         <Image
           src="/back_arrow.svg"
