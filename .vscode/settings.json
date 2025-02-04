@@ -2,10 +2,7 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.autopep8"
   },
-  "[markdown][json][jsonc][dockercompose]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascript][javascriptreact][typescript][typescriptreact]": {
+  "[markdown][json][jsonc][dockercompose][dockerfile][javascript][javascriptreact][typescript][typescriptreact][css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[dockerfile]": {
