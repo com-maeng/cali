@@ -23,7 +23,10 @@ jobs:
     runs-on: ubuntu-24.04
     needs: lint
     steps:
+      - name: Set ssh key to login the remote server
+        run: \
+          mkdir ~/.ssh
+          echo "${{ secrets.PROTOTYPE_SSH_PRIVATE_KEY }} > ~/.ssh/id_rsa"
+          chmod 600 ~/.ssh/id_rsa
       - name: Trigger deployment script within remote server
         run: ssh -o StrictHostKeyChecking=no ${{ secrets.PROTOTYPE_USERNAME }}@${{ secrets.PROTOTYPE_HOST }} 'bash /home/${{ secrets.PROTOTYPE_USERNAME }}/cali/web/deploy_prototype.sh'
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.PROTOTYPE_SSH_PRIVATE_KEY }}
