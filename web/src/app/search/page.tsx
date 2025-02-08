@@ -10,7 +10,9 @@ export default function Search() {
   const [userInput, setUserInput] = useState("");
   const [listData, setListData] = useState<string[]>([]);
 
-  const handleUserInputChange = async (e: { target: { value: any } }) => {
+  const handleUserInputChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
 
     if (value === "") {
@@ -47,13 +49,13 @@ export default function Search() {
     }
   };
 
-  const handleBackClick = (e: any) => {
+  const handleBackClick = (e: React.MouseEvent<HTMLImageElement>) => {
     if (window.history.length > 1) {
       router.back(); // Go to previous page
     } else {
       router.push("/"); // Go to root URL
     }
-    console.log(window.history.length);
+    console.error(e);
   };
 
   return (
