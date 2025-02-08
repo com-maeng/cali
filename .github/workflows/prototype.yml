@@ -24,7 +24,7 @@ jobs:
     needs: lint
     steps:
       - name: Set ssh key to login the remote server
-        run: \
+        run: |
           mkdir ~/.ssh
           echo "${{ secrets.PROTOTYPE_SSH_PRIVATE_KEY }} > ~/.ssh/id_rsa"
           chmod 600 ~/.ssh/id_rsa
