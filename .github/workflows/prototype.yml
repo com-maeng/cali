@@ -29,6 +29,6 @@ jobs:
     needs: lint
     steps:
       - name: Trigger deployment script within remote server
-        run: ssh ${{ secrets.PROTOTYPE_USERNAME }}@${{ secrets.PROTOTYPE_HOST }} 'bash /home/${{ secrets.PROTOTYPE_USERNAME }}/cali/web/deploy_prototype.sh'
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.PROTOTYPE_USERNAME }}@${{ secrets.PROTOTYPE_HOST }} 'bash /home/${{ secrets.PROTOTYPE_USERNAME }}/cali/web/deploy_prototype.sh'
         env:
           SSH_PRIVATE_KEY: ${{ secrets.PROTOTYPE_SSH_PRIVATE_KEY }}
