@@ -1,0 +1,34 @@
+name: prototype
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js with latest 20.x version
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./web
+
+      - name: Run lint
+        run: npm run lint
+        working-directory: ./web
+  trigger:
+    runs-on: ubuntu-24.04
+    needs: lint
+    steps:
+      - name: Trigger deployment script within remote server
+        run: ssh ${{ secrets.PROTOTYPE_USERNAME }}@${{ secrets.PROTOTYPE_HOST }} 'bash /home/${{ secrets.PROTOTYPE_USERNAME }}/cali/web/deploy_prototype.sh'
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
