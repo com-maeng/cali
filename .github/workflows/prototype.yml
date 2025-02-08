@@ -32,4 +32,4 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no \
           ${{ secrets.PROTOTYPE_USERNAME }}@${{ secrets.PROTOTYPE_HOST }} \
-          'cd ~/cali/web && bash deploy_prototype.sh'
+          'nohup bash -c "cd ~/cali/web && bash deploy_prototype.sh" 2>&1 &'
