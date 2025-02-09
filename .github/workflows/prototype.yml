@@ -28,8 +28,8 @@ jobs:
           mkdir ~/.ssh
           echo "${{ secrets.PROTOTYPE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-      - name: Trigger deployment script within remote server
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-          ${{ secrets.PROTOTYPE_USERNAME }}@${{ secrets.PROTOTYPE_HOST }} \
-          'nohup bash -c "cd ~/cali/web && bash deploy_prototype.sh" 2>&1 &'
+      # - name: Trigger deployment script within remote server
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no \
+      #     ${{ secrets.PROTOTYPE_USERNAME }}@${{ secrets.PROTOTYPE_HOST }} \
+      #     'nohup bash -c "cd ~/cali/web && bash deploy_prototype.sh" 2>&1 &'
