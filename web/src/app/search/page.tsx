@@ -49,13 +49,12 @@ export default function Search() {
     }
   };
 
-  const handleBackClick = (e: React.MouseEvent<HTMLImageElement>) => {
+  const handleBackClick = () => {
     if (window.history.length > 1) {
       router.back(); // Go to previous page
     } else {
       router.push("/"); // Go to root URL
     }
-    console.error(e);
   };
 
   return (
