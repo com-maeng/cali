@@ -1,0 +1,10 @@
+# Configure Next.js application development environment
+
+FROM node:20-alpine
+
+WORKDIR /cali/web
+
+COPY ./package.json .
+RUN npm install
+
+CMD [ "/bin/sh" ]
