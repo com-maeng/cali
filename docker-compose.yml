@@ -1,27 +1,4 @@
 services:
-  was:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - "./backend:/backend"
-    ports:
-      - "8080:8080"
-    env_file: ".env.dev"
-    environment:
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DATABASE_NAME}
-      - SPRING_DATASOURCE_USERNAME=${DATABASE_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
-    depends_on:
-      db:
-        condition: service_healthy
-      cache:
-        condition: service_healthy
-      search-engine:
-        condition: service_healthy
-
   db:
     image: postgres:16-alpine3.20 # Latest minor version
     environment:
@@ -36,18 +13,6 @@ services:
       timeout: 4s
     volumes:
       - "cali-db-data:/var/lib/postgresql/data"
-
-  cache:
-    image: redis:7.2-alpine3.20
-    healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
-      interval: 2s
-      retries: 4
-      start_period: 2s
-      timeout: 4s
-    volumes:
-      - cali-cache-data:/data
-
   search-engine:
     image: getmeili/meilisearch
     healthcheck:
@@ -61,9 +26,5 @@ services:
     volumes:
       - ./search_engine:/cali/search_engine
     command: "sh /cali/search_engine/run_dev.sh"
-
 volumes:
   cali-db-data:
-  cali-cache-data:
-# networks: # 지금은 불필요할 듯
-#   cali-network:
