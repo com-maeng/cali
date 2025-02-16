@@ -4,9 +4,15 @@ services:
       context: ./web
       dockerfile: Dockerfile.dev
     volumes:
-      - ./web:/cali/web
+      - ./web/public:/cali/web/public
+      - ./web/src:/cali/web/src
+      - ./web/eslint.config.mjs:/cali/web/eslint.config.mjs
+      - ./web/next.config.ts:/cali/web/next.config.ts
+      - ./web/postcss.config.mjs:/cali/web/postcss.config.mjs
+      - ./web/tailwind.config.ts:/cali/web/tailwind.config.ts
+      - ./web/tsconfig.json:/cali/web/tsconfig.json
     ports:
-      - "127.0.0.1:3000:3000"
+      - "3000:3000"
     command: ["npm", "run", "dev"]
   db:
     image: postgres:16-alpine3.20 # Latest minor version
