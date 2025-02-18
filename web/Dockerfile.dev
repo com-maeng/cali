@@ -5,6 +5,7 @@ FROM node:20-alpine
 WORKDIR /cali/web
 
 COPY ./package.json .
+COPY ./package-lock.json .
 RUN npm install
 
 CMD [ "/bin/sh" ]
