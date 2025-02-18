@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "DOTENV_FILE=.env.dev next dev --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "DOTENV_FILE=.env next start",
     "lint": "next lint"
   },
   "dependencies": {

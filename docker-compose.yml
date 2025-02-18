@@ -11,6 +11,9 @@ services:
       - ./web/postcss.config.mjs:/cali/web/postcss.config.mjs
       - ./web/tailwind.config.ts:/cali/web/tailwind.config.ts
       - ./web/tsconfig.json:/cali/web/tsconfig.json
+      - ./web/package.json:/cali/web/package.json
+      - ./web/package-lock.json:/cali/web/package-lock.json
+      - ./.env.dev:/cali/.env.dev
     ports:
       - "3000:3000"
     command: ["npm", "run", "dev"]
