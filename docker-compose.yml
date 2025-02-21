@@ -17,6 +17,11 @@ services:
     ports:
       - "3000:3000"
     command: ["npm", "run", "dev"]
+    depends_on:
+      db:
+        condition: service_healthy
+      search-engine:
+        condition: service_healthy
   db:
     image: postgres:16-alpine3.20 # Latest minor version
     environment:
@@ -32,7 +37,7 @@ services:
     volumes:
       - "cali-db-data:/var/lib/postgresql/data"
   search-engine:
-    image: getmeili/meilisearch
+    image: getmeili/meilisearch:latest
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
       interval: 2s
