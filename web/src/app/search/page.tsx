@@ -25,18 +25,13 @@ export default function Search() {
 
     try {
       const response = await fetch(
-        "http://localhost:7700/indexes/hanja/search",
+        `${process.env.NEXT_PUBLIC_APP_URL}/search/complete?q=${value}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer x0tii5RDPBcoP7PX",
-          },
-          body: JSON.stringify({ q: value }),
         }
       );
       const data = await response.json();
-      const dataList = data.hits
+      const dataList = data
         .slice(0, 5) // Top 5
         .map(
           (obj: { hanja_id: number; hanja_hun_eum: string }) =>
