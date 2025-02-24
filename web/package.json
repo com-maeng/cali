@@ -6,7 +6,7 @@
     "dev": "DOTENV_FILE=.env.dev next dev --turbopack",
     "build": "next build",
     "start": "DOTENV_FILE=.env next start",
-    "lint": "next lint"
+    "lint": "DOTENV_FILE=.env.placeholder next lint"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.15.0",
