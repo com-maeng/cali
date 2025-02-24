@@ -15,4 +15,5 @@ export PYTHONPATH=/cali
 python /cali/search_engine/run_init_config.py
 
 kill $MEILISEARCH_PID  # Restart after initial settings
+wait $MEILISEARCH_PID
 sh -c /bin/meilisearch
