@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
@@ -82,13 +83,17 @@ export default function Search() {
         </div>
       </div>
       {listData.length > 0 && (
-        <ul className={"w-full h-60 mt-[30px] bg-white"}>
+        <div className={"w-full h-60 mt-[30px] bg-white flex-col"}>
           {listData.map((item, index) => (
-            <li key={index} className="h-12 ml-6">
+            <Link
+              key={index}
+              href={`${process.env.NEXT_PUBLIC_APP_URL}/search/${item}`}
+              className="h-12 ml-6 block"
+            >
               {item}
-            </li>
+            </Link>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
