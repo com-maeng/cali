@@ -24,7 +24,7 @@ export default function RootLayout({
       <body
         className={`${pretendard.className} antialiased justify-center flex`}
       >
-        <div className="w-[440px] h-dvh flex bg-[#f7f8f9]">{children}</div>
+        <div className="w-[440px] h-dvh flex bg-[#f8f9fa]">{children}</div>
       </body>
     </html>
   );
