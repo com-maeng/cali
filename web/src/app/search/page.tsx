@@ -55,42 +55,44 @@ export default function Search() {
 
   return (
     <div className="w-full h-full flex flex-col justify-start items-start">
-      <div className="w-full flex items-center justify-start">
+      <div className="w-full h-14 flex items-center justify-start border-b border-[#C7C7CC]">
         <Image
           src="/back_arrow.svg"
-          width={10}
-          height={18}
+          width={12}
+          height={20}
           alt="뒤로가기"
-          className="ml-4"
+          className="ml-6"
           onClick={handleBackClick}
         />
-        <div className="flex w-full items-center h-12 ml-4 mr-4">
-          <Image
-            src="/search_logo.svg"
-            alt="검색"
-            width={20}
-            height={20}
-            className="absolute ml-3.5"
-          />
+        <div className="flex w-full items-center h-full ml-[27px]">
           <input
             type="text"
             value={userInput}
             onChange={handleUserInputChange}
             placeholder="한글 또는 한자를 입력하세요"
-            className="w-full h-full py-3.5 pl-12 rounded-full border-none text-base placeholder:text-[#ADB5BD] shadow-[0_2px_8px_rgba(0,0,0,0.08)] focus:outline-none"
+            className="w-full h-full border-none text-base placeholder:text-[#717171] focus:outline-none bg-inherit"
             autoFocus
           />
+          {/* TODO: Add `x` button */}
         </div>
       </div>
       {listData.length > 0 && (
-        <div className={"w-full h-60 mt-[30px] bg-white flex-col"}>
+        <div className={"w-full h-[280]px mt-2 flex-col px-6"}>
           {listData.map((item, index) => (
             <Link
               key={index}
               href={`${process.env.NEXT_PUBLIC_APP_URL}/search/${item}`}
-              className="h-12 ml-6 block"
+              className="w-full h-14 flex justify-start items-center"
             >
-              {item}
+              <Image
+                src="/search_logo.svg"
+                alt="Search icon"
+                width={20}
+                height={20}
+                className="inline"
+              />
+              <span className="w-[18px] text-lg ml-5">{item.slice(0, 1)}</span>
+              <span className="text-lg ml-3">{item.slice(1)}</span>
             </Link>
           ))}
         </div>
