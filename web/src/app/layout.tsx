@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
+import BottomBar from "@/ui/bottom-bar";
+
 import "./globals.css";
 
 const pretendard = localFont({
@@ -24,7 +26,12 @@ export default function RootLayout({
       <body
         className={`${pretendard.className} antialiased justify-center flex`}
       >
-        <div className="w-[440px] h-dvh flex bg-[#f8f9fa]">{children}</div>
+        <div className="w-[440px] h-dvh bg-[#f8f9fa] relative">
+          {children}
+          <div className="absolute left-0 bottom-0">
+            <BottomBar />
+          </div>
+        </div>
       </body>
     </html>
   );
